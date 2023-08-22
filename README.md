@@ -1,3 +1,2 @@
 # gooeysquirrel.github.io
-Test
-Menu.html
+gooeysquirrel.github.io/Menu.html
