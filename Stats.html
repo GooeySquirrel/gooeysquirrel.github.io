@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+<style>
+	* {
+		/* overflow: hidden; */
+	}
+	body {
+		background-color: #fffeba;
+	}
+	h1 {
+		text-align: center;
+		font-size: 50px;
+		text-decoration: underline;
+	}
+	#div {
+		height: 50px;
+		width: 1366px;
+	}
+	#div2 {
+		height: 500px;
+		width: 1366px;
+	}
+	#returnToMenu {
+		text-decoration: none;
+		font-weight: bold;
+		font-size: 20px;
+		color: blue;
+	}
+	#levelTutorial {
+		color: black;
+		position: absolute;
+		left: 10px;
+	}
+	table {
+		width: 100%;
+		border: 1px solid black;
+	}
+	#tableStyle {
+		text-align: center;
+	}
+	th, td {
+		padding: 25px;
+	}
+</style>
+<body>
+	<div id="div"></div>
+	<h1>Stats</h1>
+	<table id="tableStyle">
+		<tr>
+			<th style="text-decoration:underline;font-size: 25px">Level</th>
+			<th style="font-size: 25px">Total attempts</th>
+			<th style="font-size: 25px">Times completed</th>
+			<th style="font-size: 25px">Best time</th>
+			<th style="font-size: 25px">Playtime</th>
+		</tr>
+	</table>
+	<div id="div"></div>
+	<b style="font-size:20px">Total playtime: </b>
+	<p id="TP" style="font-size:20px;display:inline">N/A</p>
+	<div id="div"></div>
+	<center><a id="returnToMenu" href="Menu.html">Return to menu</a></center>
+<script>
+	var totalDuration = 0;
+	//localStorage.clear();
+	var levels = ["Tutorial", "1", "2", "3", "4", "5", "6", "7"];
+	for (i = 0; i < levels.length; i++) {
+		const newRow = document.createElement("tr");
+		newRow.setAttribute("id", i + "Column");
+		document.getElementById("tableStyle").appendChild(newRow);
+		const levelName = document.createElement("td");
+		levelName.style.fontWeight = "bold";
+		levelName.style.fontSize = "25px";
+		levelName.innerText = levels[i];
+		document.getElementById(i + "Column").appendChild(levelName);
+		const totalAttempts = document.createElement("td");
+		totalAttempts.innerText = "N/A";
+		totalAttempts.setAttribute("id", "TA" + i);
+		document.getElementById(i + "Column").appendChild(totalAttempts);
+		const timesCompleted = document.createElement("td");
+		timesCompleted.innerText = "N/A";
+		timesCompleted.setAttribute("id", "TC" + i);
+		document.getElementById(i + "Column").appendChild(timesCompleted);
+		const bestTime = document.createElement("td");
+		bestTime.innerText = "N/A";
+		bestTime.setAttribute("id", "BT" + i);
+		document.getElementById(i + "Column").appendChild(bestTime);
+		const Playtime = document.createElement("td");
+		Playtime.innerText = "N/A";
+		Playtime.setAttribute("id", "P" + i);
+		document.getElementById(i + "Column").appendChild(Playtime);
+		
+		var TA_ = "TA" + i;
+		var TC_ = "TC" + i;
+		var BT_ = "BT" + i;
+		var P_ = "P" + i;
+		if (localStorage.getItem(TA_) !== null) {
+			document.getElementById(TA_).innerText = localStorage.getItem(TA_);
+		}
+		if (localStorage.getItem(TC_) !== null) {
+			document.getElementById(TC_).innerText = localStorage.getItem(TC_);
+		}
+		if (localStorage.getItem(BT_) !== null) {
+			var bestDuration = [0, 0, 0, 0];
+			var tempBestDuration = parseInt(localStorage.getItem(BT_));
+			var hourDivision = parseInt(tempBestDuration/3600000);
+			for (j = 0; j < hourDivision; j++) {
+				bestDuration[0]++;
+				tempBestDuration -= 3600000;
+			}
+			var minDivision = parseInt(tempBestDuration/60000);
+			for (j = 0; j < minDivision; j++) {
+				bestDuration[1]++;
+				tempBestDuration -= 60000;
+			}
+			var secDivision = parseInt(tempBestDuration/1000);
+			for (j = 0; j < secDivision; j++) {
+				bestDuration[2]++;
+				tempBestDuration -= 1000;
+			}
+			var millDivision = parseInt(tempBestDuration/3600000);
+			bestDuration[3] = tempBestDuration;
+			for (j = 0; j < 3; j++) {
+				if (bestDuration[j] < 10) {
+					bestDuration[j] = "0" + bestDuration[j]
+				}
+			}
+			if (bestDuration[3] < 10) {
+				bestDuration[3] = "00" + bestDuration[3];
+			} else if (bestDuration[3] < 100) {
+				bestDuration[3] = "0" + bestDuration[3];
+			}
+			document.getElementById(BT_).innerText = bestDuration[0] + ":" + bestDuration[1] + ":" + bestDuration[2] + "." + bestDuration[3];
+		}
+		if (localStorage.getItem(P_) !== null) {
+			var levelDuration = [0, 0, 0, 0];
+			var tempLevelDuration = parseInt(localStorage.getItem(P_));
+			totalDuration+= tempLevelDuration;
+			var hourDivision = parseInt(tempLevelDuration/3600000);
+			for (j = 0; j < hourDivision; j++) {
+				levelDuration[0]++;
+				tempLevelDuration -= 3600000;
+			}
+			var minDivision = parseInt(tempLevelDuration/60000);
+			for (j = 0; j < minDivision; j++) {
+				levelDuration[1]++;
+				tempLevelDuration -= 60000;
+			}
+			var secDivision = parseInt(tempLevelDuration/1000);
+			for (j = 0; j < secDivision; j++) {
+				levelDuration[2]++;
+				tempLevelDuration -= 1000;
+			}
+			var millDivision = parseInt(tempLevelDuration/3600000);
+			levelDuration[3] = tempLevelDuration;
+			for (j = 0; j < 3; j++) {
+				if (levelDuration[j] < 10) {
+					levelDuration[j] = "0" + levelDuration[j]
+				}
+			}
+			if (levelDuration[3] < 10) {
+				levelDuration[3] = "00" + levelDuration[3];
+			} else if (levelDuration[3] < 100) {
+				levelDuration[3] = "0" + levelDuration[3];
+			}
+			document.getElementById(P_).innerText = levelDuration[0] + ":" + levelDuration[1] + ":" + levelDuration[2] + "." + levelDuration[3];
+		}
+		if (i == levels.length - 1) {
+			var totalDurationArray = [0, 0, 0, 0];
+			var tempTotalDuration = totalDuration;
+			var hourDivision = parseInt(tempTotalDuration/3600000);
+			for (j = 0; j < hourDivision; j++) {
+				totalDurationArray[0]++;
+				tempTotalDuration -= 3600000;
+			}
+			var minDivision = parseInt(tempTotalDuration/60000);
+			for (j = 0; j < minDivision; j++) {
+				totalDurationArray[1]++;
+				tempTotalDuration -= 60000;
+			}
+			var secDivision = parseInt(tempTotalDuration/1000);
+			for (j = 0; j < secDivision; j++) {
+				totalDurationArray[2]++;
+				tempTotalDuration -= 1000;
+			}
+			var millDivision = parseInt(tempTotalDuration/3600000);
+			totalDurationArray[3] = tempTotalDuration;
+			for (j = 0; j < 3; j++) {
+				if (totalDurationArray[j] < 10) {
+					totalDurationArray[j] = "0" + totalDurationArray[j]
+				}
+			}
+			if (totalDurationArray[3] < 10) {
+				totalDurationArray[3] = "00" + totalDurationArray[3];
+			} else if (totalDurationArray[3] < 100) {
+				totalDurationArray[3] = "0" + totalDurationArray[3];
+			}
+			document.getElementById("TP").innerText = totalDurationArray[0] + ":" + totalDurationArray[1] + ":" + totalDurationArray[2] + "." + totalDurationArray[3];
+		}
+	}
+</script>
+</body>
+
+</html>
