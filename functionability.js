@@ -15,11 +15,35 @@ let totalTime = [0, 0, 0, 0];
 let noclip = false;
 let push;
 let bump = [];
+let dev = true;
 
 let lock_image = new Image();
 lock_image.src = 'lock.png';
 
-			
+//MOBILE
+var deltaX = 0;
+var deltaY = 0;
+var previousX = 0;
+var previousY = 0;
+document.addEventListener("touchmove", (e) => {
+	if (previousX !== 0 || previousY !== 0) {
+		deltaX = parseInt(event.touches[0].clientX - previousX);
+		deltaY = parseInt(event.touches[0].clientY - previousY);
+		x += deltaX;
+		y += deltaY;
+	}
+	
+	previousX = event.touches[0].clientX;
+	previousY = event.touches[0].clientY;
+});
+
+document.addEventListener("touchend", (e) => {
+    deltaX = 0;
+    deltaY = 0;
+	previousX = 0;
+	previousY = 0;
+});
+
 document.addEventListener('pointerlockchange', lockChangeAlert, false);
 function lockChangeAlert() {
 	if(document.pointerLockElement === canvas) {
@@ -262,6 +286,26 @@ function functionability() {
 							y = bottomEdge(j);
 							tempArrayOfCoords(y);
 							wTouched[0] = i;
+						}
+					} else {
+						let leftSide = individualX + 20 - block[2];
+						let rightSide = block[2] + block[4] - individualX;
+						let topSide = individualY + 20 - block[3];
+						let bottomSide = block[3] + block[5] - individualY;
+						let orderSides = [leftSide, rightSide, topSide, bottomSide];
+						orderSides.sort(function(a,b){return a-b});
+						if (leftSide == orderSides[0]) {
+							x = block[2] - 20;
+							tempArrayOfCoords(x);
+						} else if (rightSide == orderSides[0]) {
+							x = block[2] + block[4];
+							tempArrayOfCoords(x);
+						} else if (topSide == orderSides[0]) {
+							y = block[3] - 20;
+							tempArrayOfCoords(y);
+						} else if (bottomSide == orderSides[0]) {
+							y = block[3] + block[5];
+							tempArrayOfCoords(y);
 						}
 					}
 				}
@@ -1000,6 +1044,7 @@ function timeEnded() {
 }
 
 function devTools(e) {
+	if (dev == true) {
 	if (e.keyCode == 13) {
 		alert(x + ', ' + y);
 	}
@@ -1017,8 +1062,10 @@ function devTools(e) {
 	}
 	if(e.keyCode == 78){
 		if (noclip == false) {
+			document.getElementById("noclip").style.visibility = "visible";
 			noclip = true;
 		} else {
+			document.getElementById("noclip").style.visibility = "hidden";
 			noclip = false;
 		}
 	}
@@ -1026,5 +1073,6 @@ function devTools(e) {
 		if (levelEnded == false) {
 			deathScreen();
 		}
+	}
 	}
 }
