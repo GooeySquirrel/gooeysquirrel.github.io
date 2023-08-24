@@ -64,7 +64,8 @@ function canvasLoop(e) {
 }
 
 function functionability() {
-	ctx.clearRect(0, 0, c.width, c.height);
+	//ctx.clearRect(0, 0, c.width, c.height);
+	ctx.clearRect(0, 0, 1366, 768);
 	
 	//IN-DEPTH SCANNER FOR COLLISIONS
 	if (x - tempX !== 0 || y - tempY !== 0) {
@@ -674,14 +675,14 @@ let pbArray = [];
 let pbInitialArray = [];
 
 function sBD(block, type, p1, p2, p3, p4, p5) {
-	p1 *= c.width/1366;
+	/*p1 *= c.width/1366;
 	p1 = Math.round(p1);
 	p2 *= c.height/768;
 	p2 = Math.round(p2);
 	p3 *= c.width/1366;
 	p3 = Math.round(p3);
 	p4 *= c.height/768;
-	p4 = Math.round(p4);
+	p4 = Math.round(p4);*/
 	if (type == "SC") {
 		clear();
 		respawnPoint = [p1-10, p2-10]
@@ -725,7 +726,7 @@ function sBD(block, type, p1, p2, p3, p4, p5) {
 }
 
 function sMBD(block, type, p1, p2, p3, p4, p5) {
-	p1 *= c.width/1366;
+	/*p1 *= c.width/1366;
 	p1 = Math.round(p1);
 	p2 *= c.height/768;
 	p2 = Math.round(p2);
@@ -736,7 +737,7 @@ function sMBD(block, type, p1, p2, p3, p4, p5) {
 	for (let i = 0; i < p5.length-1; i++) {
 		p5[i][0] *= c.width/1366;
 		p5[i][1] *= c.height/768;
-	}
+	}*/
 	movingBlockArray.push([blockId, p5, p1, p2, p3, p4, 0]); //movingBlockArray stores initialpos & allpos's & speed
 	sBD(block, type, p1, p2, p3, p4, p5[p5.length-1]); //blockArray stores currentpos & speed
 	movingBlockId++;
@@ -900,7 +901,7 @@ function TAcounter(id) {
 }
 
 function TCcounter(id) {
-	let LevelCompleteChecker = "Level" + id + "Complete";
+	let LevelCompleteChecker = id + "Complete";
 	let TC = "TC" + id
 	localStorage.setItem(LevelCompleteChecker, "true");
 		if (localStorage.getItem(TC) == null) {
@@ -947,7 +948,6 @@ function clear() {
 		document.getElementById(txt).remove();
 	}
 	textId = 0;
-	ctx.clearRect(0, 0, c.width, c.height);
 	sBD("topBorder", "w", 0, -1, 1366, 1);
 	sBD("leftBorder", "w", -1, 0, 1, 768);
 	sBD("bottomBorder", "w", 0, 768, 1366, 1);
