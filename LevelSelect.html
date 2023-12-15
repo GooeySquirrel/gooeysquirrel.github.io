@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<script src="levels.js"></script>
+<style>
+	* {
+		overflow: hidden;
+	}
+	body {
+		background-color: #d6fbff;
+	}
+	h1 {
+		text-align: center;
+		font-size: 50px;
+		text-decoration: underline;
+	}
+	#div {
+		height: 50px;
+		width: 1366px;
+	}
+	#div2 {
+		height: 150px;
+		width: 1366px;
+	}
+	#div3 {
+		height: 200px;
+		width: 1366px;
+	}
+	#returnToMenu {
+		text-decoration: none;
+		font-weight: bold;
+		font-size: 20px;
+		color: blue;
+	}
+	#levelDiv {
+		text-align: center;
+	}
+	table {
+		margin-left: auto;
+		margin-right: auto;
+		border-spacing: 100px 5px;
+	}
+	.levels {
+		text-decoration: none;
+		color: white;
+		font-size: 75px;
+		margin-left: 10px;
+		font-family: Arial;
+		-webkit-text-stroke: 2px black;
+	}
+	#completedChecker {
+		font-size: 16px;
+		color: red;
+		font-weight: bold;
+	}
+</style>
+<body>
+	<div id="div"></div>
+	<h1>Level Select</h1>
+	<div id="div2"></div>
+	
+	<table id="tableStyle">
+		<img src="arrow.png" style="position: absolute; height: 100px; transform: scaleX(-1); left: 0; display: none" id="leftArrow">
+		<img src="arrow.png" style="position: absolute; height: 100px; right: 0" id="rightArrow">
+	</table>
+	<div id="div3"></div>
+	<center><a id="returnToMenu" href="Menu.html">Return to menu</a></center>
+<script>	
+	let levelNames = document.createElement('tr');
+	levelNames.setAttribute('id', "levelNames");
+	document.getElementById("tableStyle").appendChild(levelNames);
+	var completedChecker = document.createElement('tr');
+	completedChecker.setAttribute('id', "completedChecker");
+	document.getElementById("tableStyle").appendChild(completedChecker);
+
+	let file = "1.txt";
+	fetch (file)
+	.then(x => x.text())
+	.then(y => console.log(y));
+	
+	/*function levelSelection(page) {
+		levelNames.innerHTML = "";
+		completedChecker.innerHTML = "";
+		for (let i = (0 + (page*5)); i < (5 + (page*5)); i++) {
+			if (levels[i] !== undefined) {
+				var levelPlacement = document.createElement('th');
+				levelNames.appendChild(levelPlacement);
+				var levelName = document.createElement('a');
+				levelName.setAttribute('class', "levels");
+				levelName.setAttribute('href', 'Levels/' + levels[i].levelId + ".html")
+				levelName.innerText = levels[i].levelName;
+				levelPlacement.appendChild(levelName);
+				var completedCheckerPlacement = document.createElement('th');
+				completedCheckerPlacement.innerText = "(incomplete)";
+				completedCheckerPlacement.setAttribute('id', i);
+				completedChecker.appendChild(completedCheckerPlacement);
+			}
+		}
+		for (let i = (0 + (page*5)); i < (5 + (page*5)); i++) {
+			if (levels[i] !== undefined) {
+				var levelName = levels[i].levelId + "Complete";
+				if (localStorage.getItem(levelName) == "true") {
+					completed(i);
+				}
+			}
+		}
+	}
+	
+	var page = 0;
+	levelSelection(page);
+	
+	document.getElementById("leftArrow").addEventListener('click', function (e) {
+		if (page !== 0) {
+			page -= 1;
+			changeLevels()
+		}
+	});
+	document.getElementById("rightArrow").addEventListener('click', function (e) {
+		if (page !== parseInt((levels.length-1)/5)) {
+			page += 1;
+			changeLevels()
+		}
+	});
+	
+	document.body.onkeydown = function(e){
+		if(e.keyCode == 37 && page !== 0) {
+			page -= 1;
+			changeLevels()
+		}
+		if(e.keyCode == 39 && page !== parseInt((levels.length-1)/5)) {
+			page += 1;
+			changeLevels()
+		}
+	}
+	
+	function changeLevels() {
+		levelSelection(page);
+		if (page == 0) {
+			document.getElementById("leftArrow").style.display = "none";
+		} else {
+			document.getElementById("leftArrow").style.display = "initial";
+		}
+		if (page == parseInt((levels.length-1)/5)) {
+			document.getElementById("rightArrow").style.display = "none";
+		} else {
+			document.getElementById("rightArrow").style.display = "initial";
+		}
+	}
+	
+	function completed(id){
+		document.getElementById(id).innerText = "(completed)";
+		document.getElementById(id).style.color = "green";
+	}*/
+</script>
+</body>
+
+</html>
