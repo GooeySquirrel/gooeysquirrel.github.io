@@ -1,7 +1,10 @@
+let level;
 const file = localStorage.getItem("levelSelect") + ".txt";
 fetch (file)
 .then(x => x.text())
-.then(y => console.log(y));
+.then(y => level = y);
+console.log(level);
+
 
 function phase() {
     if (phaseNumber == 1) {
