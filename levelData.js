@@ -1,4 +1,4 @@
-const file = localStorage.getItem("level");
+const file = localStorage.getItem("playLevel");
 console.log(file);
 
 function phase() {

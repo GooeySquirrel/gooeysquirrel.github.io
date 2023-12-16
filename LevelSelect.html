@@ -76,7 +76,7 @@
 
 	const levelPlacement = document.createElement('th');
 	document.getElementById("levelNames").appendChild(levelPlacement);
-	const levelName = document.createElement('a');
+	const levelName = document.createElement('p');
 	levelName.setAttribute('class', "levels");
 	levelName.setAttribute('href', "game.html");
 	levelName.innerText = "1";
@@ -87,7 +87,8 @@
 		levels[i].onclick = function() {
 			fetch ("1.txt")
 			.then(x => x.text())
-			.then(y => localStorage.setItem("level", y));
+			.then(y => localStorage.setItem("playLevel", y));
+			location.href = "game.html";
 		}
 	}
 
