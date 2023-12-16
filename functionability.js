@@ -32,8 +32,8 @@ class Camera {
     constructor () {
         this.x1 = -cameraWidth;
         this.x2 = cameraWidth;
-        this.y1 = -100;
-        this.y2 = 100;
+        this.y1 = -cameraHeight;
+        this.y2 = cameraHeight;
         this.toPos = new Vector(0, 0);
         this.pos = new Vector(0, 0);
         this.tempPos = new Vector(0, 0);
@@ -208,7 +208,7 @@ class Circle {
 }
 
 class Text {
-    constructor(text, x, y, size, color) {
+    constructor(text, x, y, size, color, width) {
         this.text = text;
         this.x = x;
         this.y = y;
@@ -217,6 +217,8 @@ class Text {
         this.z_index = 3;
         if (color)
             this.color = color;
+        if (width)
+            this.width = width;
         draw.push(this);
     }
 
@@ -234,10 +236,12 @@ class Text {
 const canvas = document.getElementById("canvas");
 canvas.width = window.screen.width;
 canvas.height = window.screen.height;
-const factor = 200/canvas.height;
 const ctx = canvas.getContext("2d");
+ctx.textAlign = "center";
 
-const cameraWidth = parseInt(100*canvas.width/canvas.height);
+const cameraHeight = 100;
+const cameraWidth = parseInt(cameraHeight*canvas.width/canvas.height);
+const factor = 2*cameraHeight/canvas.height;
 const camera = new Camera();
 //console.log(camera);
 let indivCoords = [];
@@ -806,10 +810,13 @@ function clear() {
 }
 
 document.body.onkeydown = function(e){
-    if (e.key == "n") {
+    if (e.key == "n" || e.key == "N") {
         noclip = noclip ? false : true;
         showCoords = showCoords ? false : true;
         coords.style.visibility = showCoords ? "visible" : "hidden";
+    }
+    if (e.key == "r" || e.key == "R") {
+        deathScreen();
     }
     if (e.key == "ArrowRight") {
         phaseNumber++;

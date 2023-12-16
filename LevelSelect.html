@@ -6,6 +6,7 @@
 	}
 	body {
 		background-color: #d6fbff;
+		/*USER LEVELS BACKGROUND: #70ff86*/
 	}
 	h1 {
 		text-align: center;
@@ -81,11 +82,18 @@
 	levelName.innerText = "1";
 	levelPlacement.appendChild(levelName);
 
-	const file = "1.txt";
+	/*const file = "1.txt";
 	fetch (file)
 	.then(x => x.text())
-	.then(y => console.log(y));
-	
+	.then(y => console.log(y));*/
+
+	let levels = document.getElementsByClassName("levels");
+	for (let i = 0; i < levels.length; i++) {
+		levels[i].onclick = function() {
+			localStorage.setItem("levelSelect", levels[i].innerText);
+		}
+	}
+
 	/*function levelSelection(page) {
 		levelNames.innerHTML = "";
 		completedChecker.innerHTML = "";
