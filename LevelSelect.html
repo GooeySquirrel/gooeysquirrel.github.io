@@ -85,11 +85,15 @@
 	let levels = document.getElementsByClassName("levels");
 	for (let i = 0; i < levels.length; i++) {
 		levels[i].onclick = function() {
-			fetch ("1.txt")
-			.then(x => x.text())
-			.then(y => localStorage.setItem("playLevel", y));
-			location.href = "game.html";
+			setPlayLevel("1.txt");
 		}
+	}
+
+	async function setPlayLevel(file) {
+		let x = await fetch(file);
+		let y = await x.text();
+		localStorage.setItem("playLevel", y);
+		location.href = "game.html";
 	}
 
 	/*function levelSelection(page) {
