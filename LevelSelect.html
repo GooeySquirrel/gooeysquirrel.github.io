@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-<script src="levels.js"></script>
 <style>
 	* {
 		overflow: hidden;
@@ -61,18 +60,28 @@
 	<table id="tableStyle">
 		<img src="arrow.png" style="position: absolute; height: 100px; transform: scaleX(-1); left: 0; display: none" id="leftArrow">
 		<img src="arrow.png" style="position: absolute; height: 100px; right: 0" id="rightArrow">
+		<tr id="levelNames"></tr>
+		<tr id="completedChecker"></tr>
 	</table>
 	<div id="div3"></div>
 	<center><a id="returnToMenu" href="Menu.html">Return to menu</a></center>
 <script>	
-	let levelNames = document.createElement('tr');
+	/*let levelNames = document.createElement('tr');
 	levelNames.setAttribute('id', "levelNames");
 	document.getElementById("tableStyle").appendChild(levelNames);
-	var completedChecker = document.createElement('tr');
+	let completedChecker = document.createElement('tr');
 	completedChecker.setAttribute('id', "completedChecker");
-	document.getElementById("tableStyle").appendChild(completedChecker);
+	document.getElementById("tableStyle").appendChild(completedChecker);*/
 
-	let file = "1.txt";
+	const levelPlacement = document.createElement('th');
+	document.getElementById("levelNames").appendChild(levelPlacement);
+	const levelName = document.createElement('a');
+	levelName.setAttribute('class', "levels");
+	levelName.setAttribute('href', "game.html");
+	levelName.innerText = "1";
+	levelPlacement.appendChild(levelName);
+
+	const file = "1.txt";
 	fetch (file)
 	.then(x => x.text())
 	.then(y => console.log(y));
