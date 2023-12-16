@@ -1,1 +1,4 @@
-test text
+LevelID: Level1
+LevelName: 1
+
+#1sq:w,100,200,100,200;sq:200,300,100,200;txt:GooeySquirrel,0,-50,20;txt:Teddy,0,-40,20;
