@@ -82,15 +82,12 @@
 	levelName.innerText = "1";
 	levelPlacement.appendChild(levelName);
 
-	/*const file = "1.txt";
-	fetch (file)
-	.then(x => x.text())
-	.then(y => console.log(y));*/
-
 	let levels = document.getElementsByClassName("levels");
 	for (let i = 0; i < levels.length; i++) {
 		levels[i].onclick = function() {
-			localStorage.setItem("levelSelect", levels[i].innerText);
+			fetch ("1.txt")
+			.then(x => x.text())
+			.then(y => localStorage.setItem("level", y));
 		}
 	}
 
