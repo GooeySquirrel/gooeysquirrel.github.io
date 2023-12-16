@@ -1,4 +1,5 @@
 const file = localStorage.getItem("level");
+console.log(file);
 
 function phase() {
     if (phaseNumber == 1) {
