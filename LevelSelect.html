@@ -13,32 +13,6 @@
 		font-size: 50px;
 		text-decoration: underline;
 	}
-	#div {
-		height: 50px;
-		width: 1366px;
-	}
-	#div2 {
-		height: 150px;
-		width: 1366px;
-	}
-	#div3 {
-		height: 200px;
-		width: 1366px;
-	}
-	#returnToMenu {
-		text-decoration: none;
-		font-weight: bold;
-		font-size: 20px;
-		color: blue;
-	}
-	#levelDiv {
-		text-align: center;
-	}
-	table {
-		margin-left: auto;
-		margin-right: auto;
-		border-spacing: 100px 5px;
-	}
 	.levels {
 		text-decoration: none;
 		color: white;
@@ -54,18 +28,17 @@
 	}
 </style>
 <body>
-	<div id="div"></div>
+	<div style="height: 50px; width: 1366px;"></div>
 	<h1>Level Select</h1>
-	<div id="div2"></div>
-	
-	<table id="tableStyle">
+	<div style="height: 150px; width: 1366px;"></div>
+	<table style="margin-left: auto; margin-right: auto; border-spacing: 100px 5px;">
 		<img src="arrow.png" style="position: absolute; height: 100px; transform: scaleX(-1); left: 0; display: none" id="leftArrow">
 		<img src="arrow.png" style="position: absolute; height: 100px; right: 0" id="rightArrow">
 		<tr id="levelNames"></tr>
 		<tr id="completedChecker"></tr>
 	</table>
-	<div id="div3"></div>
-	<center><a id="returnToMenu" href="Menu.html">Return to menu</a></center>
+	<div style="height: 200px; width: 1366px;"></div>
+	<center><a href="Menu.html" style="text-decoration: none; font-weight: bold; font-size: 20px; color: blue;">Return to menu</a></center>
 <script>	
 	/*let levelNames = document.createElement('tr');
 	levelNames.setAttribute('id', "levelNames");
@@ -81,22 +54,28 @@
 	document.getElementById("levelNames").appendChild(levelPlacement);
 	const completedCheckerPlacement = document.createElement('th');
 	completedCheckerPlacement.innerText = "(incomplete)";
-	completedCheckerPlacement.setAttribute('id', 1);
+	//completedCheckerPlacement.setAttribute('id', 1);
 	document.getElementById("completedChecker").appendChild(completedCheckerPlacement);
 
 	let levels = document.getElementsByClassName("levels");
 	for (let i = 0; i < levels.length; i++) {
 		levels[i].onclick = function() {
-			setPlayLevel("MainLevels/" + "1" + ".txt");
+			//setPlayLevel("MainLevels/" + "1" + ".txt");
+			const req = new Request("levels.json");
+			fetch(req)
+			.then((response) => response.json())
+			.then((data) => {
+				console.log(data);
+			})
 		}
 	}
 
 	// AFTER YOU CLICK A LEVEL (CONNECTION NEEDED)
 	async function setPlayLevel(file) {
-		let x = await fetch(file);
-		let y = await x.text();
-		localStorage.setItem("playLevel", y);
-		location.href = "game.html";
+		//let x = await fetch(file);
+		//let y = await x.text();
+		//localStorage.setItem("playLevel", y);
+		//location.href = "game.html";
 	}
 
 	/*function levelSelection(page) {
