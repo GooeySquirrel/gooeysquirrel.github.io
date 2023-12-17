@@ -1,14 +1,17 @@
 {
-    "mainLevels": {
-        "level0": {
+    "mainLevels": [
+        {
             "levelName": "Tutorial",
             "levelID": "level0",
-            "data": "#1;sq,w,100,200,100,200;sq,w,500,550,0,50,550,600,0,50,550,600,50,100,500,550,50,100,500,550,0,50,1;sq,pb,150,170,-50,-30;sq,c,200,300,100,200;sq,tp0A,50,10,top;sq,tp0B,-100,-10,bottom;sq,key0,-100,-50,-300,-200;sq,kd0,0,50,-300,-200;txt,GooeySquirrel,0,-50,20,red;txt,Teddy,0,-40,20,black,bold;#2;sq,kb,-100,-50,-100,-50;sq,db,50,100,50,100;sq,tkb,20,false,0,-100,-50,50,100;sq,tdb,20,true,0,50,100,-100,-50;"
+            "levelData": "#1;sq,w,100,200,100,200;sq,w,500,550,0,50,550,600,0,50,550,600,50,100,500,550,50,100,500,550,0,50,1;sq,pb,150,170,-50,-30;sq,c,200,300,100,200;sq,tp0A,50,10,top;sq,tp0B,-100,-10,bottom;sq,key0,-100,-50,-300,-200;sq,kd0,0,50,-300,-200;txt,GooeySquirrel,0,-50,20,red;txt,Teddy,0,-40,20,black,bold;#2;sq,kb,-100,-50,-100,-50;sq,db,50,100,50,100;sq,tkb,20,false,0,-100,-50,50,100;sq,tdb,20,true,0,50,100,-100,-50;"
         },
-        "level1": {
-            "levelName": "Tutorial",
-            "levelID": "level0",
-            "data": ""
+        {
+            "levelName": "1",
+            "levelID": "level1",
+            "levelData": ""
         }
-    }
+    ],
+    "userLevels": [
+
+    ]
 }
