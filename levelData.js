@@ -1,12 +1,22 @@
-let id = localStorage.getItem("playId");
-console.log(id);
+const id = localStorage.getItem("playId");
+let levelID, levelName, levelData;
+
+if (localStorage.getItem(id + "complete") == null)
+    localStorage.setItem(id + "complete", false);
 
 fetch(new Request("levels.json"))
 .then((response) => response.json())
 .then((data) => {
-    const levelID = data.mainLevels[id].levelID;
-    const levelName = data.mainLevels[id].levelName;
-    levelData = data.mainLevels[id].levelData;
+    if (id.substring(0,5) == "level") {
+        const mainId = id.substring(5,id.length);
+        levelID = data.mainLevels[mainId].levelID;
+        levelName = data.mainLevels[mainId].levelName;
+        levelData = data.mainLevels[mainId].levelData;
+    } else {
+        levelID = data.userLevels[id].levelID;
+        levelName = data.userLevels[id].levelName;
+        levelData = data.userLevels[id].levelData;
+    }
     levelData = levelData.split("#");
     levelData.shift();
     for (let i = 0; i < levelData.length; i++) {
@@ -14,6 +24,12 @@ fetch(new Request("levels.json"))
         levelData[i].pop();
     }
     phase();
+
+    // TOTAL ATTEMPTS
+    const TA = levelID + "TA";
+    if (localStorage.getItem(TA) == null)
+        localStorage.setItem(TA, 0);
+    localStorage.setItem(TA, parseInt(localStorage.getItem(TA)) + 1);
 })
 
 /*const levelID = file[0].substring(9);
@@ -45,15 +61,13 @@ function phase() {
                         if (!block[6])
                         new Square(block[1], parseInt(block[2]), parseInt(block[3]), parseInt(block[4]), parseInt(block[5]));
                         if (block[6]) {
-                            //console.log(block);
                             const move = [];
                             const moveLength = (block.length-7)/4;
                             for (let k = 0; k < moveLength; k++) {
                                 move.push([parseInt(block[6+k*4]), parseInt(block[7+k*4]), parseInt(block[8+k*4]), parseInt(block[9+k*4])]);
                             }
                             move.push(parseInt(block[block.length-1]));
-                            //console.log(move);
-                            //console.log(new Square(block[1], parseInt(block[2]), parseInt(block[3]), parseInt(block[4]), parseInt(block[5]), move));
+                            new Square(block[1], parseInt(block[2]), parseInt(block[3]), parseInt(block[4]), parseInt(block[5]), move);
                         }
                     } else if (block[1] == "tkb" || block[1] == "tdb") {
                         new Square([block[1], parseInt(block[2]), block[3] == "true", parseInt(block[4])], parseInt(block[5]), parseInt(block[6]), parseInt(block[7]), parseInt(block[8]));

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<style>
+	* {
+		overflow: hidden;
+	}
+	body {
+		background-color: #70ff86;
+	}
+	h1 {
+		text-align: center;
+		font-size: 50px;
+		text-decoration: underline;
+	}
+	.levels {
+		text-decoration: none;
+		color: white;
+		font-size: 75px;
+		margin-left: 10px;
+		font-family: Arial;
+		-webkit-text-stroke: 2px black;
+	}
+	.completed {
+		font-size: 16px;
+		color: green;
+		font-weight: bold;
+	}
+	.incomplete {
+		font-size: 16px;
+		color: red;
+		font-weight: bold;
+	}
+</style>
+<body>	
+	<div style="height: 50px; width: 1366px;"></div>
+	<h1>Level Select</h1>
+	<div style="height: 150px; width: 1366px;"></div>
+	<table style="margin-left: auto; margin-right: auto; border-spacing: 100px 5px;">
+		<img src="arrow.png" style="position: absolute; height: 100px; transform: scaleX(-1); left: 0; display: none" id="leftArrow">
+		<img src="arrow.png" style="position: absolute; height: 100px; right: 0" id="rightArrow">
+		<tr id="levelNames"></tr>
+		<tr id="complete"></tr>
+	</table>
+	<div style="height: 200px; width: 1366px;"></div>
+	<div style="text-align: center;"><a href="Menu.html" style="text-decoration: none; font-weight: bold; font-size: 20px; color: blue;">Return to menu</a></div>
+<script>	
+	let low = 0, high = 4;
+
+	fetch(new Request("levels.json"))
+	.then((response) => response.json())
+	.then((data) => {
+		let levels = data.userLevels;
+		if (high > levels.length-1)
+			high = levels.length;
+		for (let i = low; i < high; i++) {
+			const level = document.createElement('th');
+			level.setAttribute('class', "levels");
+			level.innerText = levels[i].levelName;
+			document.getElementById("levelNames").appendChild(level);
+			const completed = document.createElement('th');
+			if (localStorage.getItem(levels[i].levelID + "complete") == "true") {
+				completed.setAttribute('class', "completed");
+				completed.innerText = "(completed)";
+			} else {
+				completed.setAttribute('class', "incomplete");
+				completed.innerText = "(incomplete)";
+			}
+			document.getElementById("complete").appendChild(completed);
+			level.onclick = function() {
+				localStorage.setItem("playId", i);
+				console.log(localStorage.getItem("playId"));
+				location.href = "game.html";
+			}
+		}
+	})
+</script>
+</body>
+
+</html>

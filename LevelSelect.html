@@ -21,13 +21,18 @@
 		font-family: Arial;
 		-webkit-text-stroke: 2px black;
 	}
-	#completedChecker {
+	.completed {
+		font-size: 16px;
+		color: green;
+		font-weight: bold;
+	}
+	.incomplete {
 		font-size: 16px;
 		color: red;
 		font-weight: bold;
 	}
 </style>
-<body>
+<body>	
 	<div style="height: 50px; width: 1366px;"></div>
 	<h1>Level Select</h1>
 	<div style="height: 150px; width: 1366px;"></div>
@@ -35,7 +40,7 @@
 		<img src="arrow.png" style="position: absolute; height: 100px; transform: scaleX(-1); left: 0; display: none" id="leftArrow">
 		<img src="arrow.png" style="position: absolute; height: 100px; right: 0" id="rightArrow">
 		<tr id="levelNames"></tr>
-		<tr id="completedChecker"></tr>
+		<tr id="complete"></tr>
 	</table>
 	<div style="height: 200px; width: 1366px;"></div>
 	<div style="text-align: center;"><a href="Menu.html" style="text-decoration: none; font-weight: bold; font-size: 20px; color: blue;">Return to menu</a></div>
@@ -50,16 +55,21 @@
 			high = levels.length;
 		//console.log(low + ", " + high);
 		for (let i = low; i < high; i++) {
-			console.log(levels[i].levelID);
 			const level = document.createElement('th');
 			level.setAttribute('class', "levels");
 			level.innerText = levels[i].levelName;
 			document.getElementById("levelNames").appendChild(level);
 			const completed = document.createElement('th');
-			completed.innerText = "(incomplete)";
-			document.getElementById("completedChecker").appendChild(completed);
+			if (localStorage.getItem(levels[i].levelID + "complete") == "true") {
+				completed.setAttribute('class', "completed");
+				completed.innerText = "(completed)";
+			} else {
+				completed.setAttribute('class', "incomplete");
+				completed.innerText = "(incomplete)";
+			}
+			document.getElementById("complete").appendChild(completed);
 			level.onclick = function() {
-				localStorage.setItem("playId", i);
+				localStorage.setItem("playId", "level" + i);
 				console.log(localStorage.getItem("playId"));
 				location.href = "game.html";
 			}

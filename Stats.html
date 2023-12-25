@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+<style>
+	* {
+		overflow-x: hidden;
+	}
+	body {
+		background-color: #fffeba;
+	}
+	h1 {
+		text-align: center;
+		font-size: 50px;
+		text-decoration: underline;
+	}
+	#div {
+		height: 50px;
+		width: 1366px;
+	}
+	#div2 {
+		height: 500px;
+		width: 1366px;
+	}
+	#returnToMenu {
+		text-decoration: none;
+		font-weight: bold;
+		font-size: 20px;
+		color: blue;
+	}
+	#levelTutorial {
+		color: black;
+		position: absolute;
+		left: 10px;
+	}
+	table {
+		width: 100%;
+	}
+	#tableStyle {
+		text-align: center;
+		border: 1px solid black;
+	}
+	th, td {
+		padding: 25px;
+	}
+</style>
+<body>
+	<table id="headerTable">
+	<th><img src="arrow.png" style="position: relative; height: 50px; transform: scaleX(-1); left: 0" id="leftArrow"></th>
+	<th><h1 id="levelType">Main Level Stats</h1></th>
+	<th><img src="arrow.png" style="position: relative; height: 50px; right: 0" id="rightArrow"></th>
+	</table>
+	<table id="tableStyle">
+		<tr>
+			<th style="text-decoration:underline;font-size: 25px">Level</th>
+			<th style="font-size: 25px">Total attempts</th>
+			<th style="font-size: 25px">Times completed</th>
+			<th style="font-size: 25px">Best time</th>
+			<th style="font-size: 25px">Playtime</th>
+		</tr>
+	</table>
+	<div id="div"></div>
+	<b style="font-size:20px">Total playtime: </b>
+	<p id="TP" style="font-size:20px;display:inline">N/A</p>
+	<div id="div"></div>
+	<center><a id="returnToMenu" href="Menu.html">Return to menu</a></center>
+<script>
+	let page = 1;
+	let lvls;
+
+	fetch(new Request("levels.json"))
+	.then((response) => response.json())
+	.then((data) => {
+		lvls = data;
+		run();
+
+		if (localStorage.getItem("Playtime"))
+			document.getElementById("TP").innerText = returnTime(localStorage.getItem("Playtime"));
+
+		leftArrow.onclick = function() {
+			if (page == 2) {
+				page--;
+				run();
+			}
+		}
+
+		rightArrow.onclick = function() {
+			if (page == 1) {
+				page++;
+				run();
+			}
+		}
+
+		document.body.onkeydown = function(e) {
+			if (e.key == "ArrowRight" && page == 1) {
+				page++;
+				run();
+			} else  if (e.key == "ArrowLeft" && page == 2) {
+				page--;
+				run();
+			}
+		}
+	})
+
+	const leftArrow = document.getElementById("leftArrow");
+	const rightArrow = document.getElementById("rightArrow");
+
+	function run() {
+		let list = document.getElementById("tableStyle").childNodes;
+		while (list.length > 2) {
+			list[list.length-1].remove();
+		}
+		if (page == 1) {
+			document.getElementById("levelType").innerText = "Main Level Stats";
+			leftArrow.style.visibility = "hidden";
+			rightArrow.style.visibility = "visible";
+			document.body.style.backgroundColor = "#fffeba";
+
+			for (let i = 0; i < lvls.mainLevels.length; i++) {
+				const row = document.createElement('tr');
+
+				const level = document.createElement('td');
+				level.style.fontWeight = "bold";
+				level.style.fontSize = "25px";
+				level.innerText = lvls.mainLevels[i].levelName;
+				row.appendChild(level);
+
+				const TA = document.createElement('td');
+				TA.innerText = "N/A";
+				if (localStorage.getItem(lvls.mainLevels[i].levelID + "TA") != null)
+					TA.innerText = localStorage.getItem(lvls.mainLevels[i].levelID + "TA");
+				row.appendChild(TA);
+
+				const TC = document.createElement('td');
+				TC.innerText = "N/A";
+				if (localStorage.getItem(lvls.mainLevels[i].levelID + "TC") != null)
+					TC.innerText = localStorage.getItem(lvls.mainLevels[i].levelID + "TC");
+				row.appendChild(TC);
+
+				const BT = document.createElement('td');
+				BT.innerText = "N/A";
+				if (localStorage.getItem(lvls.mainLevels[i].levelID + "BT") != null)
+					BT.innerText = returnTime(localStorage.getItem(lvls.mainLevels[i].levelID + "BT"));
+				row.appendChild(BT);
+
+				const PT = document.createElement('td');
+				PT.innerText = "N/A";
+				if (localStorage.getItem(lvls.mainLevels[i].levelID + "PT") != null)
+					PT.innerText = returnTime(localStorage.getItem(lvls.mainLevels[i].levelID + "PT"));
+				row.appendChild(PT);
+
+				document.getElementById("tableStyle").appendChild(row);
+			}
+		} else if (page == 2) {
+			document.getElementById("levelType").innerText = "User Level Stats";
+			leftArrow.style.visibility = "visible";
+			rightArrow.style.visibility = "hidden";
+			document.body.style.backgroundColor = "#ffc891";
+
+			for (let i = 0; i < lvls.userLevels.length; i++) {
+				const row = document.createElement('tr');
+
+				const level = document.createElement('td');
+				level.style.fontWeight = "bold";
+				level.style.fontSize = "25px";
+				level.innerText = lvls.userLevels[i].levelName;
+				row.appendChild(level);
+
+				const TA = document.createElement('td');
+				TA.innerText = "N/A";
+				if (localStorage.getItem(lvls.userLevels[i].levelID + "TA") != null)
+					TA.innerText = localStorage.getItem(lvls.userLevels[i].levelID + "TA");
+				row.appendChild(TA);
+
+				const TC = document.createElement('td');
+				TC.innerText = "N/A";
+				if (localStorage.getItem(lvls.userLevels[i].levelID + "TC") != null)
+					TC.innerText = localStorage.getItem(lvls.userLevels[i].levelID + "TC");
+				row.appendChild(TC);
+
+				const BT = document.createElement('td');
+				BT.innerText = "N/A";
+				if (localStorage.getItem(lvls.userLevels[i].levelID + "BT") != null)
+					BT.innerText = returnTime(localStorage.getItem(lvls.userLevels[i].levelID + "BT"));
+				row.appendChild(BT);
+
+				const PT = document.createElement('td');
+				PT.innerText = "N/A";
+				if (localStorage.getItem(lvls.userLevels[i].levelID + "PT") != null)
+					PT.innerText = returnTime(localStorage.getItem(lvls.userLevels[i].levelID + "PT"));
+				row.appendChild(PT);
+
+				document.getElementById("tableStyle").appendChild(row);
+			}
+		}
+	}
+
+	function returnTime(duration) {
+		duration = duration;
+		const time = [0, 0, 0, 0];
+		time[0] = Math.floor(duration/3600000);
+		if (time[0] < 10)
+			time[0] = "0" + time[0];
+		duration %= 3600000;
+		time[1] = Math.floor(duration/60000);
+		if (time[1] < 10)
+			time[1] = "0" + time[1];
+		duration %= 60000;
+		time[2] = Math.floor(duration/1000);
+		if (time[2] < 10)
+			time[2] = "0" + time[2];
+		duration %= 1000;
+		time[3] = duration;
+		if (time[3] < 10)
+			time[3] = "00" + time[3];
+		else if (time[3] < 100)
+			time[3] = "0" + time[3];
+		const display = time[0] + ":" + time[1] + ":" + time[2] + "." + time[3];
+		return display;
+	}
+</script>
+</body>
+
+</html>

@@ -208,17 +208,18 @@ class Circle {
 }
 
 class Text {
-    constructor(text, x, y, size, color, width) {
+    constructor(text, x, y, size, color, deco) {
         this.text = text;
         this.x = x;
         this.y = y;
-        this.font = size + "px Arial";
         this.color = "black";
-        this.z_index = 3;
         if (color)
             this.color = color;
-        if (width)
-            this.width = width;
+        this.deco = "";
+        if (deco)
+            this.deco = deco + " ";
+        this.font = this.deco + size + "px Arial";
+        this.z_index = 3;
         draw.push(this);
     }
 
@@ -256,7 +257,7 @@ let phaseNumber = 1;
 let pause = true;
 let end = false;
 let time = [0, 0, 0, 0];
-let startTime, endTime;
+let startTime, endTime, totalTime;
 
 let tpArray = [];
 let keyArray = [];
@@ -761,6 +762,24 @@ function deathScreen() {
 function winScreen() {
     end = true;
     stopTimer();
+
+    // COMPLETE CHECKER
+    if (localStorage.getItem(id + "complete") == "false")
+        localStorage.setItem(id + "complete", true);
+
+    // TOTAL COMPLETES
+    const TC = levelID + "TC";
+    if (localStorage.getItem(TC) == null)
+        localStorage.setItem(TC, 0);
+    localStorage.setItem(TC, parseInt(localStorage.getItem(TC)) + 1);
+
+    // BEST TIME
+    const BT = levelID + "BT";
+    if (localStorage.getItem(BT) == null)
+        localStorage.setItem(BT, totalTime);
+    if (totalTime < parseInt(localStorage.getItem(BT)))
+        localStorage.setItem(BT, totalTime);
+
     document.exitPointerLock();
 	document.body.innerHTML = "";
 	document.body.style.backgroundColor = "#99ffb4";
@@ -785,6 +804,8 @@ function winScreen() {
 
 function stopTimer() {
     endTime = Date.now();
+    if (!startTime)
+        startTime = endTime;
     let duration = endTime - startTime;
     time[0] = Math.floor(duration/3600000);
     duration %= 3600000;
@@ -793,6 +814,18 @@ function stopTimer() {
     time[2] = Math.floor(duration/1000);
     duration %= 1000;
     time[3] = duration;
+    totalTime = 3600000*time[0] + 60000*time[1] + 1000*time[2] + time[3];
+
+    // PLAYTIME
+    const PT = levelID + "PT";
+    if (localStorage.getItem(PT) == null)
+        localStorage.setItem(PT, 0);
+    localStorage.setItem(PT, parseInt(localStorage.getItem(PT)) + totalTime);
+
+    // GRAND TOTAL PLAYTIME
+    if (localStorage.getItem("Playtime") == null)
+        localStorage.setItem("Playtime", 0);
+        localStorage.setItem("Playtime", parseInt(localStorage.getItem("Playtime")) + totalTime);
 }
 
 function clear() {
@@ -809,13 +842,15 @@ function clear() {
     pbColliderArray = [];
 }
 
+// key shortcuts
+
 document.body.onkeydown = function(e){
     if (e.key == "n" || e.key == "N") {
         noclip = noclip ? false : true;
         showCoords = showCoords ? false : true;
         coords.style.visibility = showCoords ? "visible" : "hidden";
     }
-    if (e.key == "r" || e.key == "R") {
+    if (end == false && e.key == "r" || e.key == "R") {
         deathScreen();
     }
     if (e.key == "ArrowRight") {
