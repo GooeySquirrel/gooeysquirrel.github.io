@@ -282,11 +282,22 @@ canvas.onmousedown = function(e) {
 canvas.onmouseup = function(e) {
     x2 = Math.floor((e.x/canvas.width)*(camera.x2-camera.x1)+camera.x1);
     y2 = Math.floor((e.y/canvas.height)*(camera.y2-camera.y1)+camera.y1);
+    if (x1 == undefined)
+        x1 = x2;
+    if (y1 == undefined)
+        y1 = y2;
     if (mode == 1) {
         if (x1 != x2 && y1 != y2) {
             if (selectBlock.value == "w" || selectBlock.value == "kb" || selectBlock.value == "db") {
                 new Square(selectBlock.value, Math.min(x1,x2), Math.max(x1,x2), Math.min(y1,y2), Math.max(y1,y2));
                 properties = objs[objs.length-1];
+
+                blockProperties.innerHTML = "type: <input type=\"text\" id=\"typeInput\" style=\"width: 6vw\">" + "\nx1: <input type=\"text\" id=\"x1Input\" style=\"width: 6vw\">" + "\nx2: <input type=\"text\" id=\"x2Input\" style=\"width: 6vw\">" + "\ny1: <input type=\"text\" id=\"y1Input\" style=\"width: 6vw\">" + "\ny2: <input type=\"text\" id=\"y2Input\" style=\"width: 6vw\">" + "\nmove: <input type=\"text\" id=\"moveInput\" style=\"width: 6vw\">";
+                document.getElementById("typeInput").value = properties.type;
+                document.getElementById("x1Input").value = properties.x1;
+                document.getElementById("x2Input").value = properties.x2;
+                document.getElementById("y1Input").value = properties.y1;
+                document.getElementById("y2Input").value = properties.y2;
             }
         }
         if (selectBlock.value == "tp") {
@@ -295,6 +306,37 @@ canvas.onmouseup = function(e) {
         }
     }
     noObjects.innerText = objs.length-2;
+}
+
+function editBlock() {
+    properties.type = document.getElementById("typeInput").value;
+    if (properties.type == "w" || properties.type == "kb" || properties.type == "db") {
+        properties.type = document.getElementById("typeInput").value;
+        properties.x1 = parseInt(document.getElementById("x1Input").value);
+        properties.x2 = parseInt(document.getElementById("x2Input").value);
+        properties.y1 = parseInt(document.getElementById("y1Input").value);
+        properties.y2 = parseInt(document.getElementById("y2Input").value);
+        let move = document.getElementById("moveInput").value;
+        move = move.split(",");
+        if (move.length >= 5 && (move.length-1)%4 == 0) {
+            const moveArray = [];
+            const moveLength = (move.length-1)/4;
+            for (let i = 0; i < moveLength; i++)
+                moveArray.push([parseInt(move[i*4]), parseInt(move[i*4+1]), parseInt(move[i*4+2]), parseInt(move[i*4+3])]);
+            moveArray.push(move[move.length-1]);
+
+            properties.movement = moveArray;
+            properties.speed = properties.movement[properties.movement.length-1];
+            properties.toArrayPos = 0;
+            properties.tempCoords = [parseInt(properties.x1), parseInt(properties.x2), parseInt(properties.y1), parseInt(properties.y2)];
+            console.log(properties.tempCoords);
+            properties.toCoords = [parseInt(properties.movement[0][0]), parseInt(properties.movement[0][1]), parseInt(properties.movement[0][2]), parseInt(properties.movement[0][3])];
+            properties.calculateVel();
+            console.log(properties);
+        } else {
+            properties.movement = undefined;
+        }
+    }
 }
 
 function run() {
@@ -402,11 +444,11 @@ document.body.onkeydown = function(e){
     } else if (e.key == "d") {
         camera.toPos.x += 5;
     }
-    if (e.key == "ArrowRight") {
+    if (e.key == "ArrowUp") {
         allObjs[phaseNumber-1] = [...objs];
         phaseNumber++;
         clear();
-    } else if (e.key == "ArrowLeft" && phaseNumber > 1) {
+    } else if (e.key == "ArrowDown" && phaseNumber > 1) {
         allObjs[phaseNumber-1] = [...objs];
         phaseNumber--;
         clear();
