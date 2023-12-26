@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            overflow: hidden;
+            user-select: none;
+        }
+        canvas {
+            background-color: rgb(200, 200, 200);
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas" style="position: absolute; left: 0; top: 0;"></canvas>
+    <div style="position: absolute; width: 100vw; height: 10vh; text-align: center; font-size: 30px;"><p>Editor mode: <b id="mode">Build</b></p></div>
+    <select id="selectBlock" style="position: relative; float: right; top: 0;">
+        <option value="w">w</option>
+        <option value="kb">kb</option>
+        <option value="db">db</option>
+        <option value="tp">tp</option>
+        <option value="key">key</option>
+        <option value="kd">kd</option>
+        <option value="tkb">tkb</option>
+        <option value="tdb">tdb</option>
+        <option value="pb">pb</option>
+        <option value="c">c</option>
+        <option value="cb">cb</option>
+        <option value="sqdeco">deco (sq)</option>
+        <option value="cdeco">deco (c)</option>
+        <option value="w_invis">w (invis)</option>
+    </select>
+    <label for="selectBlock" style="position: relative; float: right;">Select a block to add:ㅤ</label>
+    <div style="position: absolute; right: 5vw; width: 10vw; height: 50vh; top: 10vh; border-style: solid; text-align: center;">
+        <b>Block properties</b>
+        <div id="properties"></div>
+    </div>
+    <p id="coords" style="position: relative; font-size: 30px; margin-top: 0;">(0, 0)</p>
+    <p style="position: relative;">Go to coords (x, y)</p>
+    <input id="xCoord" style="position: relative; width: 2vw;" type="text">
+    <input id="yCoord" style="position: relative; width: 2vw;" type="text">
+    <p style="position: relative;">Phase Number: <b id="phaseNo">1</b></p>
+    <p style="position: relative;">Objects: <b id="objects">0</b></p>
+    <script src="editor.js"></script>
+</body>
+</html>
