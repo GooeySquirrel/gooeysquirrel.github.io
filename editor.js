@@ -54,9 +54,11 @@ class Square {
         // Special properties
         if (type[0] == "tkb" || type[0] == "tdb") { // IF type[0] IS AN ARRAY, INCLUDE IT BEFORE THE SUBSTRING CHECKERS
             this.type = type[0];
-            this.on = type[2];
+            this.startOn = type[2];
+            this.on = this.startOn;
             this.duration = type[1];
-            this.currentTime = 0;
+            this.offset = type[3];
+            this.currentTime = this.offset;
             this.z_index = 1;
         } else if (type[0] == "deco") {
             this.type = type[0];
@@ -220,13 +222,14 @@ class Text {
         this.text = text;
         this.x = x;
         this.y = y;
+        this.size = size;
         this.color = "black";
         if (color)
             this.color = color;
         this.deco = "";
         if (deco)
             this.deco = deco + " ";
-        this.font = this.deco + size + "px Arial";
+        this.font = this.deco + this.size + "px Arial";
         this.z_index = 3;
         draw.push(this);
     }
@@ -272,6 +275,9 @@ const modeText = document.getElementById("mode");
 const phaseText = document.getElementById("phaseNo");
 const noObjects = document.getElementById("objects");
 const blockProperties = document.getElementById("properties")
+const objectList = document.getElementById("objectList");
+const edit = document.getElementById("edit");
+const remove = document.getElementById("delete");
 let x1, x2, y1, y2, properties, exitProperties;
 let tpId = "0A", keyId = 0, kdId = 0;
 
@@ -323,8 +329,8 @@ canvas.onmouseup = function(e) {
                 blockProperties.innerHTML = "type: <input type=\"text\" id=\"typeInput\" style=\"width: 6vw\">" + "duration: <input type=\"text\" id=\"durationInput\" style=\"width: 4vw\">" + "on: <input type=\"text\" id=\"onInput\" style=\"width: 6vw\">" + "offset: <input type=\"text\" id=\"offsetInput\" style=\"width: 5vw\">" + "\nx1: <input type=\"text\" id=\"x1Input\" style=\"width: 6vw\">" + "\nx2: <input type=\"text\" id=\"x2Input\" style=\"width: 6vw\">" + "\ny1: <input type=\"text\" id=\"y1Input\" style=\"width: 6vw\">" + "\ny2: <input type=\"text\" id=\"y2Input\" style=\"width: 6vw\">";
                 document.getElementById("typeInput").value = properties.type;
                 document.getElementById("durationInput").value = properties.duration;
-                document.getElementById("onInput").value = properties.on;
-                document.getElementById("offsetInput").value = properties.currentTime;
+                document.getElementById("onInput").value = properties.startOn;
+                document.getElementById("offsetInput").value = properties.offset;
                 document.getElementById("x1Input").value = properties.x1;
                 document.getElementById("x2Input").value = properties.x2;
                 document.getElementById("y1Input").value = properties.y1;
@@ -368,9 +374,36 @@ canvas.onmouseup = function(e) {
             document.getElementById("xInput").value = properties.x;
             document.getElementById("yInput").value = properties.y;
             document.getElementById("rInput").value = properties.r;
+        } else if (selectBlock.value == "txt") {
+            new Text("(Insert text here)", x2, y2, 25, "black");
+            properties = draw[draw.length-1];
+
+            blockProperties.innerHTML = "type: <input type=\"text\" id=\"typeInput\" style=\"width: 6vw\">" + "text: <input type=\"text\" id=\"textInput\" style=\"width: 6vw\">" + "\nx: <input type=\"text\" id=\"xInput\" style=\"width: 8vw\">" + "\ny: <input type=\"text\" id=\"yInput\" style=\"width: 8vw\">" + "\nsize: <input type=\"text\" id=\"sizeInput\" style=\"width: 6vw\">" + "color: <input type=\"text\" id=\"colorInput\" style=\"width: 6vw\">" + "deco: <input type=\"text\" id=\"decoInput\" style=\"width: 6vw\">";
+            document.getElementById("typeInput").value = "txt";
+            document.getElementById("textInput").value = properties.text;
+            document.getElementById("xInput").value = properties.x;
+            document.getElementById("yInput").value = properties.y;
+            document.getElementById("sizeInput").value = properties.size;
+            document.getElementById("colorInput").value = properties.color;
+            document.getElementById("decoInput").value = properties.deco;
         }
     }
-    noObjects.innerText = objs.length-2;
+    noObjects.innerText = draw.length-2;
+    draw.sort(function(a,b){return b.z_index-a.z_index});
+    objectList.innerHTML = "";
+    for (let i = 0; i < draw.length; i++) {
+        const option = document.createElement('option');
+        option.setAttribute('value', i);
+        option.innerText = draw[i].type + " (" + draw[i].x1 + ", " + draw[i].x2 + ", " + draw[i].y1 + ", " + draw[i].y2 + ")";
+        if (draw[i].type == "SC" || (draw[i].type == "deco" && draw[i].x))
+            option.innerText = draw[i].type + " (" + draw[i].x + ", " + draw[i].y + ", " + draw[i].r + ")";
+        if (draw[i].type == "tp" || draw[i].type == "key" || draw[i].type == "kd")
+            option.innerText = draw[i].type + draw[i].id + " (" + draw[i].x1 + ", " + draw[i].x2 + ", " + draw[i].y1 + ", " + draw[i].y2 + ")";
+        if (draw[i].type == undefined)
+            option.innerText = "text (" + draw[i].x + ", " + draw[i].y + ", " + draw[i].size + ")";
+        objectList.appendChild(option);
+        console.log(option.innerText);
+    }
 }
 
 function editBlock() {
@@ -418,8 +451,10 @@ function editBlock() {
     } else if (properties.type == "tkb" || properties.type == "tdb") {
         properties.type = document.getElementById("typeInput").value;
         properties.duration = parseInt(document.getElementById("durationInput").value);
-        properties.on = document.getElementById("onInput").value;
-        properties.currentTime = parseInt(document.getElementById("offsetInput").value);
+        properties.startOn = document.getElementById("onInput").value;
+        properties.on = properties.startOn;
+        properties.offset = parseInt(document.getElementById("offsetInput").value);
+        properties.currentTime = properties.offset;
         properties.x1 = parseInt(document.getElementById("x1Input").value);
         properties.x2 = parseInt(document.getElementById("x2Input").value);
         properties.y1 = parseInt(document.getElementById("y1Input").value);
@@ -446,21 +481,27 @@ function editBlock() {
             properties.speed = properties.movement[properties.movement.length-1];
             properties.toArrayPos = 0;
             properties.tempCoords = [parseInt(properties.x1), parseInt(properties.x2), parseInt(properties.y1), parseInt(properties.y2)];
-            console.log(properties.tempCoords);
             properties.toCoords = [parseInt(properties.movement[0][0]), parseInt(properties.movement[0][1]), parseInt(properties.movement[0][2]), parseInt(properties.movement[0][3])];
             properties.calculateVel();
-            console.log(properties);
         } else {
             if (move.length > 1)
                 alert("ERROR: Invalid numbers");
             properties.movement = undefined;
         }
     } else if (properties.type == "deco") { // cdeco
-        console.log("E");
         properties.color = document.getElementById("colorInput").value;
         properties.x = parseInt(document.getElementById("xInput").value);
         properties.y = parseInt(document.getElementById("yInput").value);
         properties.r = parseInt(document.getElementById("rInput").value);
+    } else if (properties.type == "txt") {
+        console.log("E");
+        properties.text = document.getElementById("textInput").value;
+        properties.x = document.getElementById("xInput").value;
+        properties.y = document.getElementById("yInput").value;
+        properties.size = document.getElementById("sizeInput").value;
+        properties.color = document.getElementById("colorInput").value;
+        properties.deco = document.getElementById("decoInput").value;
+        properties.font = properties.deco + " " + properties.size + "px Arial";
     } else if (properties.type == "tp") {
         properties.id = document.getElementById("idInput").value;
         const changeX = parseInt(document.getElementById("xInput").value) - properties.x1;
@@ -537,8 +578,95 @@ function editBlock() {
             exitProperties.y2 -= 15;
         }
         properties.direction = document.getElementById("directionInput").value;
-    } else if (properties.type == "key") {
+    }
+}
 
+function editButton() {
+    properties = draw[objectList.value];
+    if (properties.type == "SC" || properties.type == "player")
+        alert("ERROR: Cannot edit properties of SC/player");
+    else {
+        if (properties.type == "w" || properties.type == "kb" || properties.type == "db" || properties.type == "pb" || selectBlock.value == "c" || selectBlock.value == "cb" || selectBlock.value == "w_invis") {
+            blockProperties.innerHTML = "type: <input type=\"text\" id=\"typeInput\" style=\"width: 6vw\">" + "\nx1: <input type=\"text\" id=\"x1Input\" style=\"width: 6vw\">" + "\nx2: <input type=\"text\" id=\"x2Input\" style=\"width: 6vw\">" + "\ny1: <input type=\"text\" id=\"y1Input\" style=\"width: 6vw\">" + "\ny2: <input type=\"text\" id=\"y2Input\" style=\"width: 6vw\">" + "\nmove: <input type=\"text\" id=\"moveInput\" style=\"width: 6vw\">";
+            document.getElementById("typeInput").value = properties.type;
+            document.getElementById("x1Input").value = properties.x1;
+            document.getElementById("x2Input").value = properties.x2;
+            document.getElementById("y1Input").value = properties.y1;
+            document.getElementById("y2Input").value = properties.y2;
+        } else if (properties.type == "key" || properties.type == "kd") {
+            blockProperties.innerHTML = "type: <input type=\"text\" id=\"typeInput\" style=\"width: 6vw\">" + "id: <input type=\"text\" id=\"idInput\" style=\"width: 7vw\">" + "\nx1: <input type=\"text\" id=\"x1Input\" style=\"width: 6vw\">" + "\nx2: <input type=\"text\" id=\"x2Input\" style=\"width: 6vw\">" + "\ny1: <input type=\"text\" id=\"y1Input\" style=\"width: 6vw\">" + "\ny2: <input type=\"text\" id=\"y2Input\" style=\"width: 6vw\">";
+            document.getElementById("typeInput").value = properties.type;
+            document.getElementById("idInput").value = properties.id;
+            document.getElementById("x1Input").value = properties.x1;
+            document.getElementById("x2Input").value = properties.x2;
+            document.getElementById("y1Input").value = properties.y1;
+            document.getElementById("y2Input").value = properties.y2;
+        } else if (properties.type == "tkb" || properties.type == "tdb") {
+            blockProperties.innerHTML = "type: <input type=\"text\" id=\"typeInput\" style=\"width: 6vw\">" + "duration: <input type=\"text\" id=\"durationInput\" style=\"width: 4vw\">" + "on: <input type=\"text\" id=\"onInput\" style=\"width: 6vw\">" + "offset: <input type=\"text\" id=\"offsetInput\" style=\"width: 5vw\">" + "\nx1: <input type=\"text\" id=\"x1Input\" style=\"width: 6vw\">" + "\nx2: <input type=\"text\" id=\"x2Input\" style=\"width: 6vw\">" + "\ny1: <input type=\"text\" id=\"y1Input\" style=\"width: 6vw\">" + "\ny2: <input type=\"text\" id=\"y2Input\" style=\"width: 6vw\">";
+            document.getElementById("typeInput").value = properties.type;
+            document.getElementById("durationInput").value = properties.duration;
+            document.getElementById("onInput").value = properties.startOn;
+            document.getElementById("offsetInput").value = properties.offset;
+            document.getElementById("x1Input").value = properties.x1;
+            document.getElementById("x2Input").value = properties.x2;
+            document.getElementById("y1Input").value = properties.y1;
+            document.getElementById("y2Input").value = properties.y2;
+        } else if (properties.type == "deco" && properties.x1) { // sqdeco
+            blockProperties.innerHTML = "type: <input type=\"text\" id=\"typeInput\" style=\"width: 6vw\">" + "color: <input type=\"text\" id=\"colorInput\" style=\"width: 6vw\">" + "\nx1: <input type=\"text\" id=\"x1Input\" style=\"width: 6vw\">" + "\nx2: <input type=\"text\" id=\"x2Input\" style=\"width: 6vw\">" + "\ny1: <input type=\"text\" id=\"y1Input\" style=\"width: 6vw\">" + "\ny2: <input type=\"text\" id=\"y2Input\" style=\"width: 6vw\">" + "\nmove: <input type=\"text\" id=\"moveInput\" style=\"width: 6vw\">";
+            document.getElementById("typeInput").value = properties.type;
+            document.getElementById("colorInput").value = properties.color;
+            document.getElementById("x1Input").value = properties.x1;
+            document.getElementById("x2Input").value = properties.x2;
+            document.getElementById("y1Input").value = properties.y1;
+            document.getElementById("y2Input").value = properties.y2;
+        } else if (properties.type == "deco") { // cdeco
+            blockProperties.innerHTML = "type: <input type=\"text\" id=\"typeInput\" style=\"width: 6vw\">" + "color: <input type=\"text\" id=\"colorInput\" style=\"width: 6vw\">" + "\nx: <input type=\"text\" id=\"xInput\" style=\"width: 8vw\">" + "\ny: <input type=\"text\" id=\"yInput\" style=\"width: 8vw\">" + "\nr: <input type=\"text\" id=\"rInput\" style=\"width: 8vw\">";
+            document.getElementById("typeInput").value = properties.type;
+            document.getElementById("colorInput").value = properties.color;
+            document.getElementById("xInput").value = properties.x;
+            document.getElementById("yInput").value = properties.y;
+            document.getElementById("rInput").value = properties.r;
+        } else if (properties.type == "txt") {
+            blockProperties.innerHTML = "type: <input type=\"text\" id=\"typeInput\" style=\"width: 6vw\">" + "text: <input type=\"text\" id=\"textInput\" style=\"width: 6vw\">" + "\nx: <input type=\"text\" id=\"xInput\" style=\"width: 8vw\">" + "\ny: <input type=\"text\" id=\"yInput\" style=\"width: 8vw\">" + "\nsize: <input type=\"text\" id=\"sizeInput\" style=\"width: 6vw\">" + "color: <input type=\"text\" id=\"colorInput\" style=\"width: 6vw\">" + "deco: <input type=\"text\" id=\"decoInput\" style=\"width: 6vw\">";
+            document.getElementById("typeInput").value = "txt";
+            document.getElementById("textInput").value = properties.text;
+            document.getElementById("xInput").value = properties.x;
+            document.getElementById("yInput").value = properties.y;
+            document.getElementById("sizeInput").value = properties.size;
+            document.getElementById("colorInput").value = properties.color;
+            document.getElementById("decoInput").value = properties.deco;
+        } else if (properties.type == "tp") {
+            blockProperties.innerHTML = "type: <input type=\"text\" id=\"typeInput\" style=\"width: 6vw\">" + "id: <input type=\"text\" id=\"idInput\" style=\"width: 7vw\">" + "\nx: <input type=\"text\" id=\"xInput\" style=\"width: 8vw\">" + "\ny: <input type=\"text\" id=\"yInput\" style=\"width: 8vw\">" + "\ndirection: <input type=\"text\" id=\"directionInput\" style=\"width: 4vw\">";
+            document.getElementById("typeInput").value = properties.type;
+            document.getElementById("idInput").value = properties.id;
+            document.getElementById("xInput").value = properties.x1;
+            document.getElementById("yInput").value = properties.y1;
+            document.getElementById("directionInput").value = properties.direction;
+        }
+    }
+}
+
+function deleteButton() {
+    properties = draw[objectList.value];
+    if (properties.type == "SC" || properties.type == "player")
+        alert("ERROR: Cannot delete SC/player");
+    else {
+        draw.splice(objectList.value, 1);
+        noObjects.innerText = draw.length-2;
+        objectList.innerHTML = "";
+        for (let i = 0; i < draw.length; i++) {
+            const option = document.createElement('option');
+            option.setAttribute('value', i);
+            option.innerText = draw[i].type + " (" + draw[i].x1 + ", " + draw[i].x2 + ", " + draw[i].y1 + ", " + draw[i].y2 + ")";
+            if (draw[i].type == "SC" || (draw[i].type == "deco" && draw[i].x))
+                option.innerText = draw[i].type + " (" + draw[i].x + ", " + draw[i].y + ", " + draw[i].r + ")";
+            if (draw[i].type == "tp" || draw[i].type == "key" || draw[i].type == "kd")
+                option.innerText = draw[i].type + draw[i].id + " (" + draw[i].x1 + ", " + draw[i].x2 + ", " + draw[i].y1 + ", " + draw[i].y2 + ")";
+            if (draw[i].type == undefined)
+                option.innerText = "text (" + draw[i].x + ", " + draw[i].y + ", " + draw[i].size + ")";
+            objectList.appendChild(option);
+            console.log(option.innerText);
+        }
     }
 }
 
@@ -631,8 +759,6 @@ function clear() {
     camera.toPos.y = 0;
     camera.pos.x = 0;
     camera.pos.y = 0;
-    console.log(draw);
-    console.log(objs);
     phaseText.innerText = phaseNumber;
     noObjects.innerText = objs.length-2;
 }
@@ -648,11 +774,11 @@ document.body.onkeydown = function(e){
         camera.toPos.x += 5;
     }
     if (e.key == "ArrowUp") {
-        allObjs[phaseNumber-1] = [...objs];
+        allObjs[phaseNumber-1] = [...draw];
         phaseNumber++;
         clear();
     } else if (e.key == "ArrowDown" && phaseNumber > 1) {
-        allObjs[phaseNumber-1] = [...objs];
+        allObjs[phaseNumber-1] = [...draw];
         phaseNumber--;
         clear();
     }
@@ -665,11 +791,11 @@ document.body.onkeydown = function(e){
     if (e.key == 1) {
         mode = 1;
         modeText.innerText = "Build";
-    } else if (e.key == 2) {
+    } /*else if (e.key == 2) {
         mode = 2;
         modeText.innerText = "Edit";
     } else if (e.key == 3) {
         mode = 3;
         modeText.innerText = "Delete";
-    }
+    }*/
 }

@@ -31,6 +31,7 @@
         <option value="cb">cb</option>
         <option value="sqdeco">deco (sq)</option>
         <option value="cdeco">deco (c)</option>
+        <option value="txt">text</option>
         <option value="w_invis">w (invis)</option>
     </select>
     <label for="selectBlock" style="position: relative; float: right;">Select a block to add:ㅤ</label>
@@ -45,6 +46,13 @@
     <input id="yCoord" style="position: relative; width: 2vw;" type="text">
     <p style="position: relative;">Phase Number: <b id="phaseNo">1</b></p>
     <p style="position: relative;">Objects: <b id="objects">0</b></p>
+    <div style="position: absolute; width: 20vw; height: 20vh; bottom: 5vh; border: 1px dashed;">
+        <label for="objectList">Object list: </label>
+        <select id="objectList" style="width: 20vw;"></select>
+        <button onclick="editButton()" id="edit" style="margin-top: 10vh; margin-left: 1vw;">Edit</button>
+        <button onclick="deleteButton()" id="delete">Delete</button>
+    </div>
+    <button id="export" style="position: absolute; right: 3vw; bottom: 3vh; font-size: 25px;">Export</button>
     <script src="editor.js"></script>
 </body>
 </html>
