@@ -269,6 +269,7 @@ let mode = 1;
 
 // Interface
 let showCoords = true;
+let importLevel;
 const coords = document.getElementById("coords");
 const xCoord = document.getElementById("xCoord");
 const yCoord = document.getElementById("yCoord");
@@ -404,7 +405,11 @@ canvas.onmouseup = function(e) {
         if (draw[i].type == undefined)
             option.innerText = "text (" + draw[i].x + ", " + draw[i].y + ", " + draw[i].size + ")";
         objectList.appendChild(option);
-        console.log(option.innerText);
+
+        if (draw[i].type == "tdb" || draw[i].type == "tdb") {
+            draw[i].on = draw[i].startOn;
+            draw[i].currentTime = draw[i].offset;
+        }
     }
 }
 
@@ -432,10 +437,8 @@ function editBlock() {
             properties.speed = properties.movement[properties.movement.length-1];
             properties.toArrayPos = 0;
             properties.tempCoords = [parseInt(properties.x1), parseInt(properties.x2), parseInt(properties.y1), parseInt(properties.y2)];
-            console.log(properties.tempCoords);
             properties.toCoords = [parseInt(properties.movement[0][0]), parseInt(properties.movement[0][1]), parseInt(properties.movement[0][2]), parseInt(properties.movement[0][3])];
             properties.calculateVel();
-            console.log(properties);
         } else {
             if (move.length > 1)
                 alert("ERROR: Invalid numbers");
@@ -668,7 +671,6 @@ function deleteButton() {
             if (draw[i].type == undefined)
                 option.innerText = "text (" + draw[i].x + ", " + draw[i].y + ", " + draw[i].size + ")";
             objectList.appendChild(option);
-            console.log(option.innerText);
         }
     }
 }
@@ -701,11 +703,68 @@ function exportData() {
             } else if (object.type == "deco") { // cdeco
                 data += "c,deco," +  object.color + "," + object.x + "," + object.y + "," + object.r + ";";
             } else if (object.type == "txt") {
-                data += "txt," + "," + object.x + "," + object.y + "," + object.size + "," + object.color + "," + object.deco + ";";
+                data += "txt," + object.text + "," + object.x + "," + object.y + "," + object.size + "," + object.color + "," + object.deco + ";";
             } else if (object.type == "tp") {
                 data += "sq," + object.type + object.id + "," + object.x1 + "," + object.y1 + "," + object.direction + ";";
             }
         }
+    }
+
+    localStorage.setItem("AUTOSAVE", data);
+    console.log(data);
+    alert("Level exported. Open console (Ctrl+Shift+I) to view exported code.");
+}
+
+function importData() {
+    importLevel = prompt("Please input level code:");
+    if (importLevel) {
+        importLevel = importLevel.split("*");
+        importLevel.shift();
+        for (let i = 0; i < importLevel.length; i++) {
+            importLevel[i] = importLevel[i].split(";");
+            importLevel[i].pop();
+        }
+        for (let i = 0; i < importLevel.length; i++) {
+            const phase = importLevel[i];
+            draw = [SC, player];
+            for (let j = 1; j < phase.length; j++) {
+                phase[j] = phase[j].split(",");
+                const block = phase[j];
+
+                if (block[0] == "sq") {
+                    if (block[1] == "w" || block[1] == "kb" || block[1] == "db" || block[1] == "pb" || block[1] == "c" || block[1] == "cb" || block[1] == "w_invis") {
+                        if (!block[6])
+                        new Square(block[1], parseInt(block[2]), parseInt(block[3]), parseInt(block[4]), parseInt(block[5]));
+                        if (block[6]) {
+                            const move = [];
+                            const moveLength = (block.length-7)/4;
+                            for (let k = 0; k < moveLength; k++) {
+                                move.push([parseInt(block[6+k*4]), parseInt(block[7+k*4]), parseInt(block[8+k*4]), parseInt(block[9+k*4])]);
+                            }
+                            move.push(parseInt(block[block.length-1]));
+                            new Square(block[1], parseInt(block[2]), parseInt(block[3]), parseInt(block[4]), parseInt(block[5]), move);
+                        }
+                    } else if (block[1] == "tkb" || block[1] == "tdb") {
+                        new Square([block[1], parseInt(block[2]), block[3] == "true", parseInt(block[4])], parseInt(block[5]), parseInt(block[6]), parseInt(block[7]), parseInt(block[8]));
+                    } else if (block[1] == "deco") {
+                        new Square([block[1], block[2]], parseInt(block[3]), parseInt(block[4]), parseInt(block[5]), parseInt(block[6]))
+                    } else if (block[1].substring(0,2) == "tp") {
+                        new Square(block[1], parseInt(block[2]), parseInt(block[3]), block[4]);
+                    } else if (block[1].substring(0,1) == "k") {
+                        new Square(block[1], parseInt(block[2]), parseInt(block[3]), parseInt(block[4]), parseInt(block[5]));
+                    }
+                } else if (block[0] == "c") {
+                    if (block[1] == "deco")
+                        new Circle([block[1], block[2]], parseInt(block[3]), parseInt(block[4]), parseInt(block[5]));
+                } else if (block[0] == "txt") {
+                    new Text(block[1], parseInt(block[2]), parseInt(block[3]), parseInt(block[4]), block[5], block[6]);
+                }
+            }
+            allObjs[phase[0]-1] = [...draw];
+        }
+        console.log(allObjs);
+        phaseNumber = 1;
+        clear();
     }
 }
 
