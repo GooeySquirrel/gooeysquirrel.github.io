@@ -1,0 +1,16 @@
+Notes:
+
+- Editor mode is currently always on "Build"(meaning whatever block you have on selected on the top right is the block that will be added if you click on the screen)
+- To add a block: drag cursor on screen and try not to touch any other interface
+- To move coords: WASD
+- To go to specific coords: Enter an x-coord and/or y-coord into the two boxes at the top left respectively; click the Enter key to go to these coords
+- To move phases: Up arrow (+1 phase) and down arrow (-1 phase)
+- To edit properties of block: use the "Block properties" box on the upper right, and click "Apply" to apply any edits
+- To edit properties of a previously placed block: click the "Object list" drop down menu on the bottom left and select an object; click "Edit" and the "Block properties" box on the upper right will change to that corresponding block
+- To delete a previously placed block: Click the "Object list" drop down menu and select an object, and then click the "Delete" button
+- To export level data: copy the code seen in the console and save it to a text file or something. Click this often otherwise you may accidentally lose your level!
+- To import level data: paste level code (obtained from export) into the field
+- To move a block: you will need either 5,9,13,17... (keep adding 4) numbers; every 4 numbers are the coordinates, and the last number is the speed (ex: "10,20,10,20,20,30,20,30,1" can be inputted into the "move" box)
+- "deco (sq)" move property does not work i think
+- For "text" object, "deco" property will accept values "bold" or "italic"
+- "text" says undefined for some reason at the bottom left (ignore it)
