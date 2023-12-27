@@ -685,9 +685,9 @@ function exportData() {
             const object = allObjs[i][j];
             if (object.type == "SC" || object.type == "player")
                 continue;
-            if (object.type == "w" || object.type == "kb" || object.type == "db" || object.type == "pb" || object.type == "c" || object.type == "cb" || object.value == "w_invis") {
+            if (object.type == "w" || object.type == "kb" || object.type == "db" || object.type == "pb" || object.type == "c" || object.type == "cb" || object.type == "w_invis") {
                 if (object.movement) {
-                    data += "sq," + object.startCoords[0] + "," + object.startCoords[1] + "," + object.startCoords[2] + "," + object.startCoords[3] + ",";
+                    data += "sq," + object.type + "," + object.startCoords[0] + "," + object.startCoords[1] + "," + object.startCoords[2] + "," + object.startCoords[3] + ",";
                     for (let k = 0; k < object.movement.length-1; k++)
                         data += object.movement[k][0] + "," + object.movement[k][1] + "," + object.movement[k][2] + "," + object.movement[k][3] + ",";
                     data += object.movement[object.movement.length-1] + ";";
@@ -762,7 +762,6 @@ function importData() {
             }
             allObjs[phase[0]-1] = [...draw];
         }
-        console.log(allObjs);
         phaseNumber = 1;
         clear();
     }

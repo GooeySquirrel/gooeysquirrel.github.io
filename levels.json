@@ -3,15 +3,19 @@
         {
             "levelName": "Tutorial",
             "levelID": "level0",
-            "levelData": "#1;sq,w,100,200,100,200;sq,w,500,550,0,50,550,600,0,50,550,600,50,100,500,550,50,100,500,550,0,50,1;sq,pb,150,170,-50,-30;sq,c,200,300,100,200;sq,tp0A,50,10,top;sq,tp0B,-100,-10,bottom;sq,key0,-100,-50,-300,-200;sq,kd0,0,50,-300,-200;txt,GooeySquirrel,0,-50,20,red;txt,Teddy,0,-40,20,black,bold;#2;sq,kb,-100,-50,-100,-50;sq,db,50,100,50,100;sq,tkb,20,false,0,-100,-50,50,100;sq,tdb,20,true,0,50,100,-100,-50;"
+            "levelData": "*1;sq,w,-100,-50,-50,50;sq,w,-100,500,-100,-50;sq,w,-100,400,50,100;sq,w,200,210,-50,10;sq,w,250,260,-10,50;sq,w,300,310,-50,10;sq,w,500,550,-100,200;sq,w,395,400,25,50;sq,w,395,400,-50,-25;sq,w,250,550,200,250;sq,w,250,275,100,200;sq,c,300,350,125,175;txt,Welcome player!,75,-15,25,gray,;txt,Surrounding you are,65,-5,25,gray,;txt,walls.,105,-5,25,black,bold    ;txt,You may touch them.,75,5,25,gray,;txt,Please proceed rightward -->,75,15,25,gray,;txt,Hit it to move on to the next phase!,400,155,20,gray,;txt,checkpoint.,412,145,20,yellow,bold  ;txt,This is a,386,145,20,gray,;*2;sq,w,-100,-50,-50,100;sq,w,-100,100,-100,-50;sq,w,50,100,-50,100;sq,w,-10,10,50,60;sq,kb,-50,50,150,175;sq,w,-125,-100,75,250;sq,w,100,125,75,250;sq,w,-100,-25,225,250;sq,w,25,100,225,250;sq,w,-175,175,300,325;sq,w,175,200,-200,325;sq,kb,100,125,50,75;sq,kb,150,175,-100,0;sq,kb,-125,-100,50,75;sq,w,-200,-175,-200,325;sq,kb,-175,-150,-100,0;sq,db,-175,-75,-200,-175;sq,db,75,175,-200,-175;sq,w,-100,-75,-300,-200;sq,w,75,100,-300,-200;sq,c,-75,75,-300,-250;txt,Below is a ,-10,120,20,gray,;txt,Do not touch it or else you will have to restart the phase!,0,130,20,gray,;txt,killblock.,14,120,20,orange,bold  ;txt,Be extra cautious around these!,0,-125,25,gray,italic  ;txt,Touching one will force you to restart the entire level!,0,-135,25,gray,;txt,These are,-19,-145,25,gray,;txt,deathblocks.,18,-145,25,red,bold  ;*3;sq,deco,black,-225,-200,-275,200;sq,cb,-25,25,-200,-150;sq,w,-200,200,-275,-250;sq,w,-200,200,175,200;sq,w,200,225,-275,200;sq,tp0A,-200,100,right;sq,tp0B,190,100,left;sq,key0,-200,-175,-250,-225;sq,kd0,125,200,-200,-190;sq,w,115,125,-250,-190;sq,w,100,110,-20,20,150,160,-20,20,100,110,-20,20,1;sq,w,-160,-130,-35,-5,-110,-80,-35,-5,-110,-80,15,45,-160,-130,15,45,-160,-130,-35,-5,1;sq,w_invis,-225,-200,-275,-55;sq,w_invis,-225,-200,-35,200;txt,Take a look around to find many other gimmicks to play with!,0,-75,25,gray,;txt,Once you're ready hit the green,0,-60,25,gray,;txt,complete block,0,-50,25,green,bold  ;txt,above to complete the level!,0,-40,25,gray,;sq,pb,-120,-105,-150,-135;sq,tkb,60,false,0,225,250,-250,-225;sq,tdb,60,true,0,225,250,-225,-200;"
         },
         {
             "levelName": "1",
             "levelID": "level1",
-            "levelData": ""
+            "levelData": "*1;c,deco,#ffcc79,0,0,100;sq,w_invis,100,200,100,200;"
         }
     ],
     "userLevels": [
-
+        {
+            "levelName": "the caverns",
+            "levelID": "1",
+            "levelData": ""
+        }
     ]
 }

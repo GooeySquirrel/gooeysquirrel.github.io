@@ -57,6 +57,10 @@ class Square {
             this.duration = type[1];
             this.currentTime = 0;
             this.z_index = 1;
+        } else if (type[0] == "deco") {
+            this.type = type[0];
+            this.color = type[1];
+            this.z_index = 20;
         } else if (type.substring(0,2) == "tp") {
             this.type = "tp";
             this.id = (type.substring(2,type.length));
@@ -93,10 +97,12 @@ class Square {
             pbColliderArray.push(this);
             this.initialPos = [x1, x2, y1, y2];
             this.z_index = 2;
-        } else if (type == "w") {
+        } else if (type == "w" || type == "w_invis") {
             pbColliderArray.push(this);
         } else if (type == "player") {
             this.z_index = 0;
+        } else if (type == "deco") {
+            
         }
         
         // Add to objs array
@@ -179,6 +185,9 @@ class Square {
         } else if (this.type == "cb") {
             ctx.fillStyle = "green";
             ctx.fill();
+        } else if (this.type == "deco") {
+            ctx.fillStyle = this.color;
+            ctx.fill();
         }
     }
 }
@@ -192,6 +201,12 @@ class Circle {
         this.z_index = 10;
         objs.push(this);
         draw.push(this);
+
+        if (type[0] == "deco") {
+            this.type = type[0];
+            this.color = type[1];
+            this.z_index = 15;
+        }
     }
 
     draw() {
@@ -203,6 +218,8 @@ class Circle {
         ctx.arc(x, y, r, 0, 2*Math.PI);
         if (this.type == "SC")
             ctx.fillStyle = "white";
+        if (this.type == "deco")
+            ctx.fillStyle = this.color;
         ctx.fill();
     }
 }
@@ -406,7 +423,7 @@ function run() {
         let wTouching;
         for (let i = 0; i < objs.length; i++) {
             if (x > objs[i].x1 - 10 && x < objs[i].x2 + 10 && y > objs[i].y1 - 10 && y < objs[i].y2 + 10) {
-                if (objs[i].type == "w" || (objs[i].type == "kd" && objs[i].on == true)) {
+                if (objs[i].type == "w" || (objs[i].type == "kd" && objs[i].on == true) ||  objs[i].type == "w_invis") {
                     const sideCollide = collide(x, y, objs[i]);
                     switch (sideCollide) {
                         case "left":
