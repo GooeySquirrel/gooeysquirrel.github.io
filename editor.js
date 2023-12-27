@@ -104,6 +104,7 @@ class Square {
         
         // Special for moving blocks
         if (movement) {
+            this.startCoords = [x1, x2, y1, y2];
             this.movement = movement;
             this.speed = movement[movement.length-1];
             this.toArrayPos = 0;
@@ -219,6 +220,7 @@ class Circle {
 
 class Text {
     constructor(text, x, y, size, color, deco) {
+        this.type = "txt";
         this.text = text;
         this.x = x;
         this.y = y;
@@ -425,6 +427,7 @@ function editBlock() {
                 moveArray.push([parseInt(move[i*4]), parseInt(move[i*4+1]), parseInt(move[i*4+2]), parseInt(move[i*4+3])]);
             moveArray.push(move[move.length-1]);
 
+            properties.startCoords = [parseInt(properties.x1), parseInt(properties.x2), parseInt(properties.y1), parseInt(properties.y2)];
             properties.movement = moveArray;
             properties.speed = properties.movement[properties.movement.length-1];
             properties.toArrayPos = 0;
@@ -666,6 +669,42 @@ function deleteButton() {
                 option.innerText = "text (" + draw[i].x + ", " + draw[i].y + ", " + draw[i].size + ")";
             objectList.appendChild(option);
             console.log(option.innerText);
+        }
+    }
+}
+
+function exportData() {
+    allObjs[phaseNumber-1] = [...draw];
+    let data = "";
+
+    for (let i = 0; i < allObjs.length; i++) {
+        data += "*" + (i+1) + ";";
+        for (let j = 0; j < allObjs[i].length; j++) {
+            const object = allObjs[i][j];
+            if (object.type == "SC" || object.type == "player")
+                continue;
+            if (object.type == "w" || object.type == "kb" || object.type == "db" || object.type == "pb" || object.type == "c" || object.type == "cb" || object.value == "w_invis") {
+                if (object.movement) {
+                    data += "sq," + object.startCoords[0] + "," + object.startCoords[1] + "," + object.startCoords[2] + "," + object.startCoords[3] + ",";
+                    for (let k = 0; k < object.movement.length-1; k++)
+                        data += object.movement[k][0] + "," + object.movement[k][1] + "," + object.movement[k][2] + "," + object.movement[k][3] + ",";
+                    data += object.movement[object.movement.length-1] + ";";
+                } else {
+                    data += "sq," + object.type + "," + object.x1 + "," + object.x2 + "," + object.y1 + "," + object.y2 + ";";
+                }
+            } else if (object.type == "key" || object.type == "kd") {
+                data += "sq," + object.type + object.id + "," + object.x1 + "," + object.x2 + "," + object.y1 + "," + object.y2 + ";";
+            } else if (object.type == "tkb" || object.type == "tdb") {
+                data += "sq," + object.type + "," + object.duration + "," + object.startOn + "," + object.offset + "," + object.x1 + "," + object.x2 + "," + object.y1 + "," + object.y2 + ";";
+            } else if (object.type == "deco" && object.x1) { // sqdeco
+                data += "sq,deco," + object.color + "," + object.x1 + "," + object.x2 + "," + object.y1 + "," + object.y2 + ";";
+            } else if (object.type == "deco") { // cdeco
+                data += "c,deco," +  object.color + "," + object.x + "," + object.y + "," + object.r + ";";
+            } else if (object.type == "txt") {
+                data += "txt," + "," + object.x + "," + object.y + "," + object.size + "," + object.color + "," + object.deco + ";";
+            } else if (object.type == "tp") {
+                data += "sq," + object.type + object.id + "," + object.x1 + "," + object.y1 + "," + object.direction + ";";
+            }
         }
     }
 }
