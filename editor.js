@@ -272,7 +272,8 @@ const modeText = document.getElementById("mode");
 const phaseText = document.getElementById("phaseNo");
 const noObjects = document.getElementById("objects");
 const blockProperties = document.getElementById("properties")
-let x1, x2, y1, y2, properties;
+let x1, x2, y1, y2, properties, exitProperties;
+let tpId = "0A", keyId = 0, kdId = 0;
 
 canvas.onmousedown = function(e) {
     x1 = Math.floor((e.x/canvas.width)*(camera.x2-camera.x1)+camera.x1);
@@ -288,7 +289,7 @@ canvas.onmouseup = function(e) {
         y1 = y2;
     if (mode == 1) {
         if (x1 != x2 && y1 != y2) {
-            if (selectBlock.value == "w" || selectBlock.value == "kb" || selectBlock.value == "db") {
+            if (selectBlock.value == "w" || selectBlock.value == "kb" || selectBlock.value == "db" || selectBlock.value == "pb" || selectBlock.value == "c" || selectBlock.value == "cb" || selectBlock.value == "w_invis") {
                 new Square(selectBlock.value, Math.min(x1,x2), Math.max(x1,x2), Math.min(y1,y2), Math.max(y1,y2));
                 properties = objs[objs.length-1];
 
@@ -298,11 +299,75 @@ canvas.onmouseup = function(e) {
                 document.getElementById("x2Input").value = properties.x2;
                 document.getElementById("y1Input").value = properties.y1;
                 document.getElementById("y2Input").value = properties.y2;
+            } else if (selectBlock.value == "key" || selectBlock.value == "kd") {
+                if (selectBlock.value == "key") {
+                    new Square("key" + keyId, Math.min(x1,x2), Math.max(x1,x2), Math.min(y1,y2), Math.max(y1,y2));
+                    keyId++;
+                } else if (selectBlock.value == "kd") {
+                    new Square("kd" + kdId, Math.min(x1,x2), Math.max(x1,x2), Math.min(y1,y2), Math.max(y1,y2));
+                    kdId++;
+                }
+                properties = objs[objs.length-1];
+
+                blockProperties.innerHTML = "type: <input type=\"text\" id=\"typeInput\" style=\"width: 6vw\">" + "id: <input type=\"text\" id=\"idInput\" style=\"width: 7vw\">" + "\nx1: <input type=\"text\" id=\"x1Input\" style=\"width: 6vw\">" + "\nx2: <input type=\"text\" id=\"x2Input\" style=\"width: 6vw\">" + "\ny1: <input type=\"text\" id=\"y1Input\" style=\"width: 6vw\">" + "\ny2: <input type=\"text\" id=\"y2Input\" style=\"width: 6vw\">";
+                document.getElementById("typeInput").value = properties.type;
+                document.getElementById("idInput").value = properties.id;
+                document.getElementById("x1Input").value = properties.x1;
+                document.getElementById("x2Input").value = properties.x2;
+                document.getElementById("y1Input").value = properties.y1;
+                document.getElementById("y2Input").value = properties.y2;
+            } else if (selectBlock.value == "tkb" || selectBlock.value == "tdb") {
+                new Square([selectBlock.value, 60, false, 0], Math.min(x1,x2), Math.max(x1,x2), Math.min(y1,y2), Math.max(y1,y2));
+                properties = objs[objs.length-1];
+
+                blockProperties.innerHTML = "type: <input type=\"text\" id=\"typeInput\" style=\"width: 6vw\">" + "duration: <input type=\"text\" id=\"durationInput\" style=\"width: 4vw\">" + "on: <input type=\"text\" id=\"onInput\" style=\"width: 6vw\">" + "offset: <input type=\"text\" id=\"offsetInput\" style=\"width: 5vw\">" + "\nx1: <input type=\"text\" id=\"x1Input\" style=\"width: 6vw\">" + "\nx2: <input type=\"text\" id=\"x2Input\" style=\"width: 6vw\">" + "\ny1: <input type=\"text\" id=\"y1Input\" style=\"width: 6vw\">" + "\ny2: <input type=\"text\" id=\"y2Input\" style=\"width: 6vw\">";
+                document.getElementById("typeInput").value = properties.type;
+                document.getElementById("durationInput").value = properties.duration;
+                document.getElementById("onInput").value = properties.on;
+                document.getElementById("offsetInput").value = properties.currentTime;
+                document.getElementById("x1Input").value = properties.x1;
+                document.getElementById("x2Input").value = properties.x2;
+                document.getElementById("y1Input").value = properties.y1;
+                document.getElementById("y2Input").value = properties.y2;
+            } else if (selectBlock.value == "sqdeco") {
+                new Square(["deco", "#ffffff"], Math.min(x1,x2), Math.max(x1,x2), Math.min(y1,y2), Math.max(y1,y2));
+                properties = objs[objs.length-1];
+
+                blockProperties.innerHTML = "type: <input type=\"text\" id=\"typeInput\" style=\"width: 6vw\">" + "color: <input type=\"text\" id=\"colorInput\" style=\"width: 6vw\">" + "\nx1: <input type=\"text\" id=\"x1Input\" style=\"width: 6vw\">" + "\nx2: <input type=\"text\" id=\"x2Input\" style=\"width: 6vw\">" + "\ny1: <input type=\"text\" id=\"y1Input\" style=\"width: 6vw\">" + "\ny2: <input type=\"text\" id=\"y2Input\" style=\"width: 6vw\">" + "\nmove: <input type=\"text\" id=\"moveInput\" style=\"width: 6vw\">";
+                document.getElementById("typeInput").value = properties.type;
+                document.getElementById("colorInput").value = properties.color;
+                document.getElementById("x1Input").value = properties.x1;
+                document.getElementById("x2Input").value = properties.x2;
+                document.getElementById("y1Input").value = properties.y1;
+                document.getElementById("y2Input").value = properties.y2;
             }
         }
         if (selectBlock.value == "tp") {
-            new Square("tp", x2, y2, "left");
+            new Square("tp" + tpId, x2, y2, "left");
+            if (tpId.substring(tpId.length-1) == "A") {
+                tpId = parseInt(tpId) + "B";
+            } else if (tpId.substring(tpId.length-1) == "B") {
+                tpId = (parseInt(tpId) + 1) + "A";
+            }
             properties = objs[objs.length-1];
+            exitProperties = objs[objs.length-2];
+
+            blockProperties.innerHTML = "type: <input type=\"text\" id=\"typeInput\" style=\"width: 6vw\">" + "id: <input type=\"text\" id=\"idInput\" style=\"width: 7vw\">" + "\nx: <input type=\"text\" id=\"xInput\" style=\"width: 8vw\">" + "\ny: <input type=\"text\" id=\"yInput\" style=\"width: 8vw\">" + "\ndirection: <input type=\"text\" id=\"directionInput\" style=\"width: 4vw\">";
+            document.getElementById("typeInput").value = properties.type;
+            document.getElementById("idInput").value = properties.id;
+            document.getElementById("xInput").value = properties.x1;
+            document.getElementById("yInput").value = properties.y1;
+            document.getElementById("directionInput").value = properties.direction;
+        } else if (selectBlock.value == "cdeco") {
+            new Circle(["deco", "#eeeeee"], x2, y2, 25);
+            properties = objs[objs.length-1];
+
+            blockProperties.innerHTML = "type: <input type=\"text\" id=\"typeInput\" style=\"width: 6vw\">" + "color: <input type=\"text\" id=\"colorInput\" style=\"width: 6vw\">" + "\nx: <input type=\"text\" id=\"xInput\" style=\"width: 8vw\">" + "\ny: <input type=\"text\" id=\"yInput\" style=\"width: 8vw\">" + "\nr: <input type=\"text\" id=\"rInput\" style=\"width: 8vw\">";
+            document.getElementById("typeInput").value = properties.type;
+            document.getElementById("colorInput").value = properties.color;
+            document.getElementById("xInput").value = properties.x;
+            document.getElementById("yInput").value = properties.y;
+            document.getElementById("rInput").value = properties.r;
         }
     }
     noObjects.innerText = objs.length-2;
@@ -310,12 +375,14 @@ canvas.onmouseup = function(e) {
 
 function editBlock() {
     properties.type = document.getElementById("typeInput").value;
-    if (properties.type == "w" || properties.type == "kb" || properties.type == "db") {
+    if (properties.type == "w" || properties.type == "kb" || properties.type == "db" || properties.type == "pb" || selectBlock.value == "c" || selectBlock.value == "cb" || selectBlock.value == "w_invis") {
         properties.type = document.getElementById("typeInput").value;
         properties.x1 = parseInt(document.getElementById("x1Input").value);
         properties.x2 = parseInt(document.getElementById("x2Input").value);
         properties.y1 = parseInt(document.getElementById("y1Input").value);
         properties.y2 = parseInt(document.getElementById("y2Input").value);
+        if (properties.x1 > properties.x2 || properties.y1 > properties.y2)
+            alert("WARNING: You made x1 > x2 or y1 > y2; this will cause bugs (it makes the block uninteractable)")
         let move = document.getElementById("moveInput").value;
         move = move.split(",");
         if (move.length >= 5 && (move.length-1)%4 == 0) {
@@ -334,8 +401,144 @@ function editBlock() {
             properties.calculateVel();
             console.log(properties);
         } else {
+            if (move.length > 1)
+                alert("ERROR: Invalid numbers");
             properties.movement = undefined;
         }
+    } else if (properties.type == "key" || properties.type == "kd") {
+        properties.type = document.getElementById("typeInput").value;
+        properties.id = document.getElementById("idInput").value;
+        properties.x1 = parseInt(document.getElementById("x1Input").value);
+        properties.x2 = parseInt(document.getElementById("x2Input").value);
+        properties.y1 = parseInt(document.getElementById("y1Input").value);
+        properties.y2 = parseInt(document.getElementById("y2Input").value);
+        if (properties.x1 > properties.x2 || properties.y1 > properties.y2)
+            alert("WARNING: You made x1 > x2 or y1 > y2; this will cause bugs (it makes the block uninteractable)")
+        console.log(objs);
+    } else if (properties.type == "tkb" || properties.type == "tdb") {
+        properties.type = document.getElementById("typeInput").value;
+        properties.duration = parseInt(document.getElementById("durationInput").value);
+        properties.on = document.getElementById("onInput").value;
+        properties.currentTime = parseInt(document.getElementById("offsetInput").value);
+        properties.x1 = parseInt(document.getElementById("x1Input").value);
+        properties.x2 = parseInt(document.getElementById("x2Input").value);
+        properties.y1 = parseInt(document.getElementById("y1Input").value);
+        properties.y2 = parseInt(document.getElementById("y2Input").value);
+
+    } else if (properties.type == "deco" && properties.x1) { // sqdeco
+        properties.type = document.getElementById("typeInput").value;
+        properties.color = document.getElementById("colorInput").value;
+        properties.x1 = parseInt(document.getElementById("x1Input").value);
+        properties.x2 = parseInt(document.getElementById("x2Input").value);
+        properties.y1 = parseInt(document.getElementById("y1Input").value);
+        properties.y2 = parseInt(document.getElementById("y2Input").value);
+
+        let move = document.getElementById("moveInput").value;
+        move = move.split(",");
+        if (move.length >= 5 && (move.length-1)%4 == 0) {
+            const moveArray = [];
+            const moveLength = (move.length-1)/4;
+            for (let i = 0; i < moveLength; i++)
+                moveArray.push([parseInt(move[i*4]), parseInt(move[i*4+1]), parseInt(move[i*4+2]), parseInt(move[i*4+3])]);
+            moveArray.push(move[move.length-1]);
+
+            properties.movement = moveArray;
+            properties.speed = properties.movement[properties.movement.length-1];
+            properties.toArrayPos = 0;
+            properties.tempCoords = [parseInt(properties.x1), parseInt(properties.x2), parseInt(properties.y1), parseInt(properties.y2)];
+            console.log(properties.tempCoords);
+            properties.toCoords = [parseInt(properties.movement[0][0]), parseInt(properties.movement[0][1]), parseInt(properties.movement[0][2]), parseInt(properties.movement[0][3])];
+            properties.calculateVel();
+            console.log(properties);
+        } else {
+            if (move.length > 1)
+                alert("ERROR: Invalid numbers");
+            properties.movement = undefined;
+        }
+    } else if (properties.type == "deco") { // cdeco
+        console.log("E");
+        properties.color = document.getElementById("colorInput").value;
+        properties.x = parseInt(document.getElementById("xInput").value);
+        properties.y = parseInt(document.getElementById("yInput").value);
+        properties.r = parseInt(document.getElementById("rInput").value);
+    } else if (properties.type == "tp") {
+        properties.id = document.getElementById("idInput").value;
+        const changeX = parseInt(document.getElementById("xInput").value) - properties.x1;
+        const changeY = parseInt(document.getElementById("yInput").value) - properties.y1;
+        properties.x1 += changeX;
+        properties.x2 += changeX;
+        properties.y1 += changeY;
+        properties.y2 += changeY;
+        exitProperties.x1 += changeX;
+        exitProperties.x2 += changeX;
+        exitProperties.y1 += changeY;
+        exitProperties.y2 += changeY;
+        const direction = document.getElementById("directionInput").value;
+        console.log(properties.direction + ", " + direction);
+        if (properties.direction == "left" && direction == "right") {
+            exitProperties.x1 += 15;
+            exitProperties.x2 += 15;
+        } else if (properties.direction == "left" && direction == "top") {
+            properties.x2 += 30;
+            properties.y2 -= 30;
+            exitProperties.x1 += 15;
+            exitProperties.x2 += 30;
+            exitProperties.y1 -= 15;
+            exitProperties.y2 -= 30;
+        } else if (properties.direction == "left" && direction == "bottom") {
+            properties.x2 += 30;
+            properties.y2 -= 30;
+            exitProperties.x1 += 15;
+            exitProperties.x2 += 30;
+            exitProperties.y2 -= 15;
+        } else if (properties.direction == "right" && direction == "left") {
+            exitProperties.x1 -= 15;
+            exitProperties.x2 -= 15;
+        } else if (properties.direction == "right" && direction == "top") {
+            properties.x2 += 30;
+            properties.y2 -= 30;
+            exitProperties.x2 += 15;
+            exitProperties.y1 -= 15;
+            exitProperties.y2 -= 30;
+        } else if (properties.direction == "right" && direction == "bottom") {
+            properties.x2 += 30;
+            properties.y2 -= 30;
+            exitProperties.x2 += 15;
+            exitProperties.y2 -= 15;
+        } else if (properties.direction == "top" && direction == "left") {
+            properties.x2 -= 30;
+            properties.y2 += 30;
+            exitProperties.x1 -= 15;
+            exitProperties.x2 -= 30;
+            exitProperties.y1 += 15;
+            exitProperties.y2 += 30;
+        } else if (properties.direction == "top" && direction == "right") {
+            properties.x2 -= 30;
+            properties.y2 += 30;
+            exitProperties.x2 -= 15;
+            exitProperties.y1 += 15;
+            exitProperties.y2 += 30;
+        } else if (properties.direction == "top" && direction == "bottom") {
+            exitProperties.y1 += 15;
+            exitProperties.y2 += 15;
+        } else if (properties.direction == "bottom" && direction == "left") {
+            properties.x2 -= 30;
+            properties.y2 += 30;
+            exitProperties.x1 -= 15;
+            exitProperties.x2 -= 30;
+            exitProperties.y2 += 15;
+        } else if (properties.direction == "bottom" && direction == "right") {
+            properties.x2 -= 30;
+            properties.y2 += 30;
+            exitProperties.x2 -= 15;
+            exitProperties.y2 += 15;
+        } else if (properties.direction == "bottom" && direction == "top") {
+            exitProperties.y1 -= 15;
+            exitProperties.y2 -= 15;
+        }
+        properties.direction = document.getElementById("directionInput").value;
+    } else if (properties.type == "key") {
+
     }
 }
 
