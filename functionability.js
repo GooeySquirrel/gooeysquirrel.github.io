@@ -301,8 +301,11 @@ document.addEventListener("pointerlockchange", () => {
         pause = false;
     else
         pause = true;
-    if (!startTime)
+    if (!startTime) {
         startTime = Date.now();
+        audio.loop = true;
+        audio.play();
+    }
 })
 
 document.addEventListener("mousemove", (e) => {
@@ -744,6 +747,7 @@ function collideFix(val, coord) {
 
 function deathScreen() {
     end = true;
+    audio.pause();
     stopTimer();
     document.exitPointerLock();
 	document.body.innerHTML = "";
@@ -862,13 +866,13 @@ function clear() {
 // key shortcuts
 
 document.body.onkeydown = function(e){
-    if (e.key == "n" || e.key == "N") {
+    if (end == false && e.key == "r" || e.key == "R") {
+        deathScreen();
+    }
+    /*if (e.key == "n" || e.key == "N") {
         noclip = noclip ? false : true;
         showCoords = showCoords ? false : true;
         coords.style.visibility = showCoords ? "visible" : "hidden";
-    }
-    if (end == false && e.key == "r" || e.key == "R") {
-        deathScreen();
     }
     if (e.key == "ArrowRight") {
         phaseNumber++;
@@ -878,5 +882,5 @@ document.body.onkeydown = function(e){
         phaseNumber--;
         clear();
         phase();
-    }
+    }*/
 }

@@ -1,6 +1,6 @@
 Notes:
 
-- Editor mode is currently always on "Build"(meaning whatever block you have on selected on the top right is the block that will be added if you click on the screen)
+- Editor mode is currently always on "Build" (meaning whatever block you have on selected on the top right is the block that will be added if you click on the screen)
 - To add a block: drag cursor on screen and try not to touch any other interface
 - To move coords: WASD
 - To go to specific coords: Enter an x-coord and/or y-coord into the two boxes at the top left respectively; click the Enter key to go to these coords
