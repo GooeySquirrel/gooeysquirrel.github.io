@@ -235,7 +235,7 @@ class Text {
         this.deco = "";
         if (deco)
             this.deco = deco + " ";
-        this.font = this.deco + size + "px Arial";
+        this.font = this.deco + (size*zoom) + "px Arial";
         this.z_index = 3;
         draw.push(this);
     }
@@ -257,15 +257,17 @@ canvas.height = window.screen.height;
 const ctx = canvas.getContext("2d");
 ctx.textAlign = "center";
 
-const cameraHeight = 100;
+let zoom = 0.5;
+const cameraHeight = 100/zoom;
 const cameraWidth = parseInt(cameraHeight*canvas.width/canvas.height);
 const factor = 2*cameraHeight/canvas.height;
+//console.log(factor);
 const camera = new Camera();
-//console.log(camera);
+console.log(camera);
 let indivCoords = [];
 const SC = new Circle("SC", 0, 0, 25);
-const player = new Square("player", -10, 10, -10, 10);
-const length = (player.x2-player.x1)/2;
+const playerLength = 10;
+const player = new Square("player", -playerLength, playerLength, -playerLength, playerLength);
 
 const lockImg = new Image();
 lockImg.src = "lock.png";
@@ -370,7 +372,7 @@ function run() {
         indivCoords = [];
         const movements = [Math.abs(xMovement), Math.abs(yMovement)];
         movements.sort(function(a,b){return b-a});
-        const checks = Math.floor(movements[0]/10); // this is causing soooo many problems
+        const checks = Math.floor(movements[0]/playerLength); // this is causing soooo many problems
         const changeX = xMovement/(checks+1);
         const changeY = yMovement/(checks+1);
         for (let i = 0; i <= checks; i++) {
@@ -425,27 +427,27 @@ function run() {
         let y = indivCoords[h][1];
         let wTouching;
         for (let i = 0; i < objs.length; i++) {
-            if (x > objs[i].x1 - 10 && x < objs[i].x2 + 10 && y > objs[i].y1 - 10 && y < objs[i].y2 + 10) {
+            if (x > objs[i].x1 - playerLength && x < objs[i].x2 + playerLength && y > objs[i].y1 - playerLength && y < objs[i].y2 + playerLength) {
                 if (objs[i].type == "w" || (objs[i].type == "kd" && objs[i].on == true) ||  objs[i].type == "w_invis") {
                     const sideCollide = collide(x, y, objs[i]);
                     switch (sideCollide) {
                         case "left":
-                            camera.toPos.x = objs[i].x1 - 10;
+                            camera.toPos.x = objs[i].x1 - playerLength;
                             camera.pos.x = camera.toPos.x;
                             collideFix(camera.pos.x, "x");
                             break;
                         case "right":
-                            camera.toPos.x = objs[i].x2 + 10;
+                            camera.toPos.x = objs[i].x2 + playerLength;
                             camera.pos.x = camera.toPos.x;
                             collideFix(camera.pos.x, "x");
                             break;
                         case "top":
-                            camera.toPos.y = objs[i].y1 - 10;
+                            camera.toPos.y = objs[i].y1 - playerLength;
                             camera.pos.y = camera.toPos.y;
                             collideFix(camera.pos.y, "y");
                             break;
                         case "bottom":
-                            camera.toPos.y = objs[i].y2 + 10;
+                            camera.toPos.y = objs[i].y2 + playerLength;
                             camera.pos.y = camera.toPos.y;
                             collideFix(camera.pos.y, "y");
                             break;
@@ -504,25 +506,25 @@ function run() {
                     const sideCollide = collide(x, y, objs[i]);
                     switch (sideCollide) {
                         case "left":
-                            add = camera.pos.x - objs[i].x1 + 10;
+                            add = camera.pos.x - objs[i].x1 + playerLength;
                             objs[i].x1 += add;
                             objs[i].x2 += add;
                             push = "right";
                             break;
                         case "right":
-                            add = camera.pos.x - objs[i].x2 - 10;
+                            add = camera.pos.x - objs[i].x2 - playerLength;
                             objs[i].x1 += add;
                             objs[i].x2 += add;
                             push = "left";
                             break;
                         case "top":
-                            add = camera.pos.y - objs[i].y1 + 10;
+                            add = camera.pos.y - objs[i].y1 + playerLength;
                             objs[i].y1 += add;
                             objs[i].y2 += add;
                             push = "down";
                             break;
                         case "bottom":
-                            add = camera.pos.y - objs[i].y2 - 10;
+                            add = camera.pos.y - objs[i].y2 - playerLength;
                             objs[i].y1 += add;
                             objs[i].y2 += add;
                             push = "up";
@@ -608,7 +610,7 @@ function run() {
                                 }
                                 chainBlock.x1 += subtract;
                                 chainBlock.x2 += subtract;
-                                camera.toPos.x = pbChain[0].x1 - 10;
+                                camera.toPos.x = pbChain[0].x1 - playerLength;
                                 camera.pos.x = camera.toPos.x;
                                 collideFix(camera.pos.x, "x");
                             } else if (push == "left" && chainBlock.y2 > collider.y1 && chainBlock.y1 < collider.y2 && chainBlock.x2 - (camera.pos.x - x) > collider.x1 && chainBlock.x1 < collider.x2) {
@@ -622,7 +624,7 @@ function run() {
                                 }
                                 chainBlock.x1 += subtract;
                                 chainBlock.x2 += subtract;
-                                camera.toPos.x = pbChain[0].x2 + 10;
+                                camera.toPos.x = pbChain[0].x2 + playerLength;
                                 camera.pos.x = camera.toPos.x;
                                 collideFix(camera.pos.x, "x");
                                 console.log("LEFT");
@@ -637,7 +639,7 @@ function run() {
                                 }
                                 chainBlock.y1 += subtract;
                                 chainBlock.y2 += subtract;
-                                camera.toPos.y = pbChain[0].y1 - 10;
+                                camera.toPos.y = pbChain[0].y1 - playerLength;
                                 camera.pos.y = camera.toPos.y;
                                 collideFix(camera.pos.y, "y");
                             } else if (push == "up" && chainBlock.x2 > collider.x1 && chainBlock.x1 < collider.x2 && chainBlock.y2 - (camera.pos.y - y) > collider.y1 && chainBlock.y1 < collider.y2) {
@@ -651,7 +653,7 @@ function run() {
                                 }
                                 chainBlock.y1 += subtract;
                                 chainBlock.y2 += subtract;
-                                camera.toPos.y = pbChain[0].y2 + 10;
+                                camera.toPos.y = pbChain[0].y2 + playerLength;
                                 camera.pos.y = camera.toPos.y;
                                 collideFix(camera.pos.y, "y");
                             }
@@ -704,19 +706,19 @@ run();
 function fixCamera() {
     camera.x1 = -cameraWidth + camera.pos.x;
     camera.x2 = cameraWidth + camera.pos.x;
-    camera.y1 = -100 + camera.pos.y;
-    camera.y2 = 100 + camera.pos.y;
-    player.x1 = (camera.x2+camera.x1)/2 - length;
-    player.x2 = (camera.x2+camera.x1)/2 + length;
-    player.y1 = (camera.y2+camera.y1)/2 - length;
-    player.y2 = (camera.y2+camera.y1)/2 + length;
+    camera.y1 = -cameraHeight + camera.pos.y;
+    camera.y2 = cameraHeight + camera.pos.y;
+    player.x1 = (camera.x2+camera.x1)/2 - playerLength;
+    player.x2 = (camera.x2+camera.x1)/2 + playerLength;
+    player.y1 = (camera.y2+camera.y1)/2 - playerLength;
+    player.y2 = (camera.y2+camera.y1)/2 + playerLength;
 }
 
 function collide(x, y, obj) {
-    const left = x - (obj.x1 - 10);
-    const right = x - (obj.x2 + 10);
-    const top = y - (obj.y1 - 10);
-    const bottom = y - (obj.y2 + 10);
+    const left = x - (obj.x1 - playerLength);
+    const right = x - (obj.x2 + playerLength);
+    const top = y - (obj.y1 - playerLength);
+    const bottom = y - (obj.y2 + playerLength);
     const sideCollide = Math.min(Math.abs(left), Math.abs(right), Math.abs(top), Math.abs(bottom));
     switch (sideCollide) {
         case Math.abs(left):
